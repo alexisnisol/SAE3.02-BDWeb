@@ -1,6 +1,9 @@
 # SAE3.02-BDWeb
 
 ## Membres du groupe
+- Alexis Nisol
+- Alexy Wiciak
+- Mouad Zouadi
 
 ## Séance 1 et 2 (16/09)
 - Création du MCD
