@@ -15,8 +15,8 @@ CREATE TABLE COURS_PROGRAMME (
   duree INT CHECK (duree > 0 AND duree < 3),
   heure TIME,
   jour VARCHAR(16) CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')),
-  Ddd DATE,
-  Ddf DATE,
+  Ddd date,
+  Ddf date,
   nb_personnes_max INT CHECK (nb_personnes_max > 0 AND nb_personnes_max < 11)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE PERSONNE (
   salaire DECIMAL(10, 2) NULL,
   poids FLOAT NULL,
   cotisation DECIMAL(10, 2) NULL,
-  date_inscription DATE NULL,
+  date_inscription date NULL,
   niveau INT NULL
 );
 
@@ -49,8 +49,8 @@ CREATE TABLE PONEY (
 CREATE TABLE COURS_REALISE (
   id_cours INT NOT NULL,
   id_personne INT NOT NULL,
-  date DATE NOT NULL,
-  PRIMARY KEY (id_cours, date),
+  dateR date NOT NULL,
+  PRIMARY KEY (id_cours, dateR),
   FOREIGN KEY (id_cours) REFERENCES COURS_PROGRAMME (id_cp),
   FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p)
 );
@@ -60,8 +60,8 @@ CREATE TABLE RESERVER (
   id_personne INT NOT NULL,
   id_poney INT NOT NULL,
   id_cours INT NOT NULL,
-  date DATE NOT NULL,
-  PRIMARY KEY (id_personne, id_poney, id_cours, date),
+  dateR date NOT NULL,
+  PRIMARY KEY (id_personne, id_poney, id_cours, dateR),
   FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p),
   FOREIGN KEY (id_poney) REFERENCES PONEY (id),
   FOREIGN KEY (id_cours) REFERENCES COURS_REALISE (id_cours)
@@ -100,21 +100,21 @@ BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
   DECLARE cours_consecutifs INT;
-  DECLARE dernier_cours DATETIME;
+  DECLARE dernier_cours dateTIME;
 
   -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
   SELECT COUNT(*) INTO cours_consecutifs
   FROM RESERVER
   WHERE id_poney = NEW.id_poney
-  AND date = NEW.date
+  AND dateR = NEW.dateR
   AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
 
-  -- Vérifier la date et l'heure du dernier cours
-  SELECT MAX(CONCAT(date, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
+  -- Vérifier la dateR et l'heure du dernier cours
+  SELECT MAX(CONCAT(dateR, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
   FROM RESERVER
   JOIN COURS_REALISE ON RESERVER.id_cours = COURS_REALISE.id_cours
   WHERE id_poney = NEW.id_poney
-  AND date < NEW.date;
+  AND dateR < NEW.dateR;
 
   -- Si le poney a déjà donné 2 heures de cours consécutives sans repos
   IF cours_consecutifs >= 2 THEN
@@ -123,7 +123,7 @@ BEGIN
   END IF;
 
   -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
-  IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(HOUR, dernier_cours, NEW.date) < 1 THEN
+  IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(HOUR, dernier_cours, NEW.dateR) < 1 THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
   END IF;
@@ -153,15 +153,15 @@ VALUES
 (2, 'Fury', 5, 90.0, 25);      -- Poney avec poids max de 90 kg
 
 -- Insertion dans COURS_REALISE
-INSERT INTO COURS_REALISE (id_cours, id_personne, date)
+INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
 VALUES 
 (1, 1, '2023-10-01'),  -- Cours pour Paul
 (2, 2, '2023-10-02');  -- Cours pour Anne
 
 -- Cette insertion devrait réussir (Paul pèse 70 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, date)
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (1, 1, 1, '2023-10-01');
 
 -- Cette insertion devrait échouer (Anne pèse 85 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, date)
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (2, 1, 2, '2023-10-02');
