@@ -100,7 +100,7 @@ BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
   DECLARE cours_consecutifs INT;
-  DECLARE dernier_cours dateTIME;
+  DECLARE dernier_cours DATETIME;
 
   -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
   SELECT COUNT(*) INTO cours_consecutifs
@@ -110,11 +110,12 @@ BEGIN
   AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
 
   -- Vérifier la dateR et l'heure du dernier cours
-  SELECT MAX(CONCAT(dateR, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
+  SELECT MAX(CONCAT(RESERVER.dateR, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
   FROM RESERVER
   JOIN COURS_REALISE ON RESERVER.id_cours = COURS_REALISE.id_cours
-  WHERE id_poney = NEW.id_poney
-  AND dateR < NEW.dateR;
+  JOIN COURS_PROGRAMME ON COURS_REALISE.id_cours = COURS_PROGRAMME.id_cp
+  WHERE RESERVER.id_poney = NEW.id_poney
+  AND RESERVER.dateR < NEW.dateR;
 
   -- Si le poney a déjà donné 2 heures de cours consécutives sans repos
   IF cours_consecutifs >= 2 THEN
@@ -130,6 +131,7 @@ BEGIN
 END |
 DELIMITER ;
 
+
 -----------------------------------------------------------------
 
 -- Insertion dans COURS_PROGRAMME
@@ -138,7 +140,6 @@ VALUES
 (1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
 (2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
 (3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
-
 
 -- Insertion dans PERSONNE
 INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
@@ -165,3 +166,15 @@ VALUES (1, 1, 1, '2023-10-01');
 -- Cette insertion devrait échouer (Anne pèse 85 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (2, 1, 2, '2023-10-02');
+-- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (1, 1, 1, '2023-10-01 10:00:00');
+
+-- Insertion dans RESERVER : Test échoué (Anne pèse 85 kg, poney max 75 kg)
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (2, 1, 2, '2023-10-02 11:00:00');
+
+-- Insertion supplémentaire pour tester le trigger de repos
+-- Test échoué : Anne essaie de réserver Tornado pour un cours après 2 heures de suite
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (1, 1, 3, '2023-10-01 12:00:00');  -- Cela doit échouer car pas de repos entre les cours.
