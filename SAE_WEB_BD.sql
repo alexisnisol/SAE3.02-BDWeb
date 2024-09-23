@@ -49,7 +49,7 @@ CREATE TABLE PONEY (
 CREATE TABLE COURS_REALISE (
   id_cours INT NOT NULL,
   id_personne INT NOT NULL,
-  dateR date NOT NULL,
+  dateR DATETIME NOT NULL,
   PRIMARY KEY (id_cours, dateR),
   FOREIGN KEY (id_cours) REFERENCES COURS_PROGRAMME (id_cp),
   FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p)
@@ -60,7 +60,7 @@ CREATE TABLE RESERVER (
   id_personne INT NOT NULL,
   id_poney INT NOT NULL,
   id_cours INT NOT NULL,
-  dateR date NOT NULL,
+  dateR DATETIME NOT NULL,
   PRIMARY KEY (id_personne, id_poney, id_cours, dateR),
   FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p),
   FOREIGN KEY (id_poney) REFERENCES PONEY (id),
