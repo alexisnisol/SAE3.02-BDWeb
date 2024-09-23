@@ -64,7 +64,7 @@ CREATE TABLE RESERVER (
   PRIMARY KEY (id_personne, id_poney, id_cours, dateR),
   FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p),
   FOREIGN KEY (id_poney) REFERENCES PONEY (id),
-  FOREIGN KEY (id_cours) REFERENCES COURS_REALISE (id_cours)
+  FOREIGN KEY (id_cours, dateR) REFERENCES COURS_REALISE (id_cours, dateR)
 );
 
 ----------------------------------------------------
@@ -76,6 +76,7 @@ BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
   DECLARE poids_personne FLOAT;
+  declare error_msg varchar(255);
 
   -- Récupérer le poids de la personne réservée
   SELECT poids INTO poids_personne
@@ -84,8 +85,9 @@ BEGIN
 
   -- Vérifier si le poids de la personne dépasse le poids maximum du poney
   IF poids_personne > (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney) THEN
+    set error_msg = concat('Erreur : la personne ne peut pas monter sur ce poney, son poids dépasse le poids maximum. Poids de la personne : ', poids_personne, ' > ', (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney));
     SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Erreur : la personne ne peut pas monter sur ce poney, son poids dépasse le poids maximum.';
+    SET MESSAGE_TEXT = error_msg;
   END IF;
 END |
 DELIMITER ;
@@ -129,6 +131,34 @@ DELIMITER ;
 -- END |
 -- DELIMITER ;
 
+DELIMITER |
+create or replace trigger VerifierReposPoney before insert on RESERVER FOR EACH ROW
+BEGIN
+  declare cours_consecutifs int;
+  DECLARE total_heures INT DEFAULT 5;
+  declare heure_depuis_dernier_cours int;
+
+
+  -- DERNIER COURS IL Y A x HEURES: ('2023-10-01 15:00:00')
+  --select min(TIMESTAMPDIFF(HOUR, dateR, NEW.dateR)) into heures_depuis_dernier_cours from RESERVER where DATE(dateR) = date(NEW.dateR);
+  -- Vérifier les cours consécutifs du poney avant la nouvelle réservation
+
+
+  -- Calculer le total des heures travaillées par le poney dans les 2 heures précédentes à la nouvelle réservation
+  SELECT IFNULL(SUM(C.duree), 0)
+  INTO total_heures
+  FROM RESERVER R
+  JOIN COURS_PROGRAMME C ON R.id_cours = C.id_cp
+  WHERE R.id_poney = NEW.id_poney
+    AND TIMESTAMPDIFF(HOUR, R.dateR, NEW.dateR) <= 2
+    AND R.dateR < NEW.dateR;
+
+  IF total_heures != 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Le poney doit avoir une heure de repos après deux heures de travail consécutif.';
+  END IF;
+END |
+DELIMITER ;
 
 
 -----------------------------------------------------------------
@@ -155,16 +185,12 @@ VALUES
 -- Insertion dans COURS_REALISE
 INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
 VALUES 
-(1, 1, '2023-10-01'),  -- Cours pour Paul
-(2, 2, '2023-10-02');  -- Cours pour Anne
+(1, 1, '2023-10-01 10:00:00'),  -- Cours pour Paul
+(1, 1, '2023-10-01 12:00:00'),  -- Cours pour Paul
+(1, 1, '2023-10-01 13:00:00'),  -- Cours pour Paul
+(1, 1, '2023-10-02 13:00:00'),  -- Cours pour Paul
+(2, 2, '2023-10-02 11:00:00');  -- Cours pour Anne
 
--- Cette insertion devrait réussir (Paul pèse 70 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (1, 1, 1, '2023-10-01');
-
--- Cette insertion devrait échouer (Anne pèse 85 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (2, 1, 2, '2023-10-02');
 -- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (1, 1, 1, '2023-10-01 10:00:00');
@@ -174,13 +200,5 @@ INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (2, 1, 2, '2023-10-02 11:00:00');
 
 
-
--- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
--- VALUES (1, 1, 1, '2023-10-01 10:00:00');  -- Premier cours pour le poney
-
-
--- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
--- VALUES (1, 1, 1, '2023-10-01 12:00:00');  -- Réservation après 2 heures de repos
-
--- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
--- VALUES (1, 1, 1, '2023-10-01 12:30:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
+ INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+ VALUES (1, 1, 1, '2023-10-01 13:00:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
