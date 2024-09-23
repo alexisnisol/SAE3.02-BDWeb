@@ -1,9 +1,11 @@
--- CREATION DE LA BASE DE DONNEES
+--Ajout des DROP
 DROP TABLE IF EXISTS RESERVER;
 DROP TABLE IF EXISTS COURS_REALISE;
 DROP TABLE IF EXISTS PONEY;
 DROP TABLE IF EXISTS PERSONNE;
 DROP TABLE IF EXISTS COURS_PROGRAMME;
+
+-- CREATION DE LA BASE DE DONNEES
 
 -- Création de la table COURS_PROGRAMME
 CREATE TABLE COURS_PROGRAMME (
@@ -65,12 +67,7 @@ CREATE TABLE RESERVER (
   FOREIGN KEY (id_cours) REFERENCES COURS_REALISE (id_cours)
 );
 
--- Insertion dans COURS_PROGRAMME
-INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES 
-(1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
-(2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
-(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
+----------------------------------------------------
 
 -- Trigger : Poids max du client ne doit pas dépasser le poids max supportable par le poney
 DELIMITER |
@@ -92,6 +89,56 @@ BEGIN
   END IF;
 END |
 DELIMITER ;
+
+--------------------------------------------------
+
+
+-- Trigger : Vérifier que les poneys ont au moins 1 heure de repos après 2 heures de cours
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierReposPoney
+BEFORE INSERT ON RESERVER
+FOR EACH ROW
+BEGIN
+  DECLARE cours_consecutifs INT;
+  DECLARE dernier_cours DATETIME;
+
+  -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
+  SELECT COUNT(*) INTO cours_consecutifs
+  FROM RESERVER
+  WHERE id_poney = NEW.id_poney
+  AND date = NEW.date
+  AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
+
+  -- Vérifier la date et l'heure du dernier cours
+  SELECT MAX(CONCAT(date, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
+  FROM RESERVER
+  JOIN COURS_REALISE ON RESERVER.id_cours = COURS_REALISE.id_cours
+  WHERE id_poney = NEW.id_poney
+  AND date < NEW.date;
+
+  -- Si le poney a déjà donné 2 heures de cours consécutives sans repos
+  IF cours_consecutifs >= 2 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après 2 heures de cours.';
+  END IF;
+
+  -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
+  IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(HOUR, dernier_cours, NEW.date) < 1 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
+  END IF;
+END |
+DELIMITER ;
+
+-----------------------------------------------------------------
+
+-- Insertion dans COURS_PROGRAMME
+INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
+VALUES 
+(1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
+(2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
+(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
+
 
 -- Insertion dans PERSONNE
 INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
