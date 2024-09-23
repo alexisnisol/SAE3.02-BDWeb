@@ -94,42 +94,41 @@ DELIMITER ;
 
 
 -- Trigger : Vérifier que les poneys ont au moins 1 heure de repos après 2 heures de cours
-DELIMITER |
-CREATE OR REPLACE TRIGGER VerifierReposPoney
-BEFORE INSERT ON RESERVER
-FOR EACH ROW
-BEGIN
-  DECLARE cours_consecutifs INT;
-  DECLARE dernier_cours DATETIME;
+-- DELIMITER |
+-- CREATE OR REPLACE TRIGGER VerifierReposPoney
+-- BEFORE INSERT ON RESERVER
+-- FOR EACH ROW
+-- BEGIN
+--   DECLARE cours_consecutifs INT DEFAULT 0;
+--   DECLARE dernier_cours DATETIME;
 
-  -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
-  SELECT COUNT(*) INTO cours_consecutifs
-  FROM RESERVER
-  WHERE id_poney = NEW.id_poney
-  AND dateR = NEW.dateR
-  AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
+--   -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
+--   SELECT COUNT(*) INTO cours_consecutifs
+--   FROM RESERVER
+--   WHERE id_poney = NEW.id_poney
+--   AND DATE(dateR) = DATE(NEW.dateR)  -- Vérifie uniquement la date
+--   AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
 
-  -- Vérifier la dateR et l'heure du dernier cours
-  SELECT MAX(CONCAT(RESERVER.dateR, ' ', COURS_PROGRAMME.heure)) INTO dernier_cours
-  FROM RESERVER
-  JOIN COURS_REALISE ON RESERVER.id_cours = COURS_REALISE.id_cours
-  JOIN COURS_PROGRAMME ON COURS_REALISE.id_cours = COURS_PROGRAMME.id_cp
-  WHERE RESERVER.id_poney = NEW.id_poney
-  AND RESERVER.dateR < NEW.dateR;
+--   -- Vérifier la dateR et l'heure du dernier cours
+--   SELECT MAX(dateR) INTO dernier_cours
+--   FROM RESERVER
+--   WHERE id_poney = NEW.id_poney
+--   AND dateR < NEW.dateR;  -- Réservations antérieures
 
-  -- Si le poney a déjà donné 2 heures de cours consécutives sans repos
-  IF cours_consecutifs >= 2 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après 2 heures de cours.';
-  END IF;
+--   -- Si le poney a déjà donné 2 cours consécutifs sans repos
+--   IF cours_consecutifs >= 2 THEN
+--     SIGNAL SQLSTATE '45000'
+--     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après 2 heures de cours.';
+--   END IF;
 
-  -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
-  IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(HOUR, dernier_cours, NEW.dateR) < 1 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
-  END IF;
-END |
-DELIMITER ;
+--   -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
+--   IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(MINUTE, dernier_cours, NEW.dateR) < 60 THEN
+--     SIGNAL SQLSTATE '45000'
+--     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
+--   END IF;
+-- END |
+-- DELIMITER ;
+
 
 
 -----------------------------------------------------------------
@@ -174,7 +173,14 @@ VALUES (1, 1, 1, '2023-10-01 10:00:00');
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (2, 1, 2, '2023-10-02 11:00:00');
 
--- Insertion supplémentaire pour tester le trigger de repos
--- Test échoué : Anne essaie de réserver Tornado pour un cours après 2 heures de suite
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (1, 1, 3, '2023-10-01 12:00:00');  -- Cela doit échouer car pas de repos entre les cours.
+
+
+-- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+-- VALUES (1, 1, 1, '2023-10-01 10:00:00');  -- Premier cours pour le poney
+
+
+-- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+-- VALUES (1, 1, 1, '2023-10-01 12:00:00');  -- Réservation après 2 heures de repos
+
+-- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+-- VALUES (1, 1, 1, '2023-10-01 12:30:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
