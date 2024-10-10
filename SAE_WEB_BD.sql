@@ -41,8 +41,7 @@ CREATE TABLE PONEY (
   id INT PRIMARY KEY,
   nom VARCHAR(42),
   age INT,
-  poids_max FLOAT,
-  heures_travail INT
+  poids_max FLOAT
 );
 
 -- Création de la table COURS_REALISE avec clés étrangères
@@ -177,10 +176,10 @@ VALUES
 (2, 'Dupont', 'Anne', '45 Avenue des Champs, Lyon', '0607080910', 'anne.dupont@example.com', '3 ans experience', NULL, 85.0, NULL, '2023-02-10', 3);
 
 -- Insertion dans PONEY
-INSERT INTO PONEY (id, nom, age, poids_max, heures_travail)
+INSERT INTO PONEY (id, nom, age, poids_max)
 VALUES 
-(1, 'Tornado', 7, 75.0, 20),  -- Poney avec poids max de 75 kg
-(2, 'Fury', 5, 90.0, 25);      -- Poney avec poids max de 90 kg
+(1, 'Tornado', 7, 75.0),  -- Poney avec poids max de 75 kg
+(2, 'Fury', 5, 90.0);      -- Poney avec poids max de 90 kg
 
 -- Insertion dans COURS_REALISE
 INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
@@ -190,6 +189,7 @@ VALUES
 (1, 1, '2023-10-01 13:00:00'),  -- Cours pour Paul
 (1, 1, '2023-10-02 13:00:00'),  -- Cours pour Paul
 (2, 2, '2023-10-02 11:00:00');  -- Cours pour Anne
+
 
 -- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
