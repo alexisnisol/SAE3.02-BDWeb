@@ -95,40 +95,6 @@ DELIMITER ;
 
 
 -- Trigger : Vérifier que les poneys ont au moins 1 heure de repos après 2 heures de cours
--- DELIMITER |
--- CREATE OR REPLACE TRIGGER VerifierReposPoney
--- BEFORE INSERT ON RESERVER
--- FOR EACH ROW
--- BEGIN
---   DECLARE cours_consecutifs INT DEFAULT 0;
---   DECLARE dernier_cours DATETIME;
-
---   -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
---   SELECT COUNT(*) INTO cours_consecutifs
---   FROM RESERVER
---   WHERE id_poney = NEW.id_poney
---   AND DATE(dateR) = DATE(NEW.dateR)  -- Vérifie uniquement la date
---   AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
-
---   -- Vérifier la dateR et l'heure du dernier cours
---   SELECT MAX(dateR) INTO dernier_cours
---   FROM RESERVER
---   WHERE id_poney = NEW.id_poney
---   AND dateR < NEW.dateR;  -- Réservations antérieures
-
---   -- Si le poney a déjà donné 2 cours consécutifs sans repos
---   IF cours_consecutifs >= 2 THEN
---     SIGNAL SQLSTATE '45000'
---     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après 2 heures de cours.';
---   END IF;
-
---   -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
---   IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(MINUTE, dernier_cours, NEW.dateR) < 60 THEN
---     SIGNAL SQLSTATE '45000'
---     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
---   END IF;
--- END |
--- DELIMITER ;
 
 DELIMITER |
 create or replace trigger VerifierReposPoney before insert on RESERVER FOR EACH ROW
@@ -152,6 +118,38 @@ BEGIN
   END IF;
 END |
 DELIMITER ;
+
+
+-----------------------------------------------------------------
+
+-- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierNbPersonnesMax
+BEFORE INSERT ON RESERVER
+FOR EACH ROW
+BEGIN
+  DECLARE nb_reservations INT;
+
+  -- Calculer le nombre de réservations actuelles pour le cours
+  SELECT COUNT(*)
+  INTO nb_reservations
+  FROM RESERVER
+  WHERE id_cours = NEW.id_cours
+    AND dateR = NEW.dateR;
+
+  -- Vérifier si le nombre de réservations dépasse le maximum autorisé
+  IF nb_reservations >= (SELECT nb_personnes_max FROM COURS_PROGRAMME WHERE id_cp = NEW.id_cours) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le nombre maximal de personnes pour ce cours a été atteint.';
+  END IF;
+END |
+DELIMITER ;
+
+
+
+-----------------------------------------------------------------
+
+
 
 
 DELIMITER |
@@ -192,7 +190,17 @@ VALUES
 INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
 VALUES 
 (1, 'Martin', 'Paul', '123 Rue Principale, Paris', '0102030405', 'paul.martin@example.com', '5 ans experience', NULL, 70.0, NULL, '2023-01-15', 2),
-(2, 'Dupont', 'Anne', '45 Avenue des Champs, Lyon', '0607080910', 'anne.dupont@example.com', '3 ans experience', NULL, 85.0, NULL, '2023-02-10', 3);
+(2, 'Dupont', 'Anne', '45 Avenue des Champs, Lyon', '0607080910', 'anne.dupont@example.com', '3 ans experience', NULL, 85.0, NULL, '2023-02-10', 3),
+(3, 'Personne1', 'Test', 'Adresse1', '0101010101', 'personne1@example.com', NULL, NULL, 70.0, NULL, '2023-01-01', 1),
+(4, 'Personne2', 'Test', 'Adresse2', '0202020202', 'personne2@example.com', NULL, NULL, 70.0, NULL, '2023-01-02', 1),
+(5, 'Personne3', 'Test', 'Adresse3', '0303030303', 'personne3@example.com', NULL, NULL, 70.0, NULL, '2023-01-03', 1),
+(6, 'Personne4', 'Test', 'Adresse4', '0404040404', 'personne4@example.com', NULL, NULL, 70.0, NULL, '2023-01-04', 1),
+(7, 'Personne5', 'Test', 'Adresse5', '0505050505', 'personne5@example.com', NULL, NULL, 70.0, NULL, '2023-01-05', 1),
+(8, 'Personne6', 'Test', 'Adresse6', '0606060606', 'personne6@example.com', NULL, NULL, 70.0, NULL, '2023-01-06', 1),
+(9, 'Personne7', 'Test', 'Adresse7', '0707070707', 'personne7@example.com', NULL, NULL, 70.0, NULL, '2023-01-07', 1),
+(10, 'Personne8', 'Test', 'Adresse8', '0808080808', 'personne8@example.com', NULL, NULL, 70.0, NULL, '2023-01-08', 1),
+(11, 'Personne9', 'Test', 'Adresse9', '0909090909', 'personne9@example.com', NULL, NULL, 70.0, NULL, '2023-01-09', 1),
+(12, 'Personne10', 'Test', 'Adresse10', '1010101010', 'personne10@example.com', NULL, NULL, 70.0, NULL, '2023-01-10', 1);
 
 -- Insertion dans PONEY
 INSERT INTO PONEY (id, nom, age, poids_max)
@@ -210,12 +218,29 @@ VALUES
 (2, 2, '2023-10-02 11:00:00');  -- Cours pour Anne
 
 
--- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
+-- Insertion dans RESERVER
+-- Réservations valides
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (1, 1, 1, '2023-10-01 10:00:00');
+VALUES 
+(1, 1, 1, '2023-10-01 10:00:00'),  -- Réservation réussie pour Paul
+(2, 2, 2, '2023-10-02 11:00:00');  -- Réservation réussie pour Anne
 
--- Insertion dans RESERVER : Test échoué (Anne pèse 85 kg, poney max 75 kg)
+-- Ajout de réservations pour le cours 1
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES 
+(3, 1, 1, '2023-10-01 10:00:00'),
+(4, 1, 1, '2023-10-01 10:00:00'),
+(5, 1, 1, '2023-10-01 10:00:00'),
+(6, 1, 1, '2023-10-01 10:00:00'),
+(7, 1, 1, '2023-10-01 10:00:00'),
+(8, 1, 1, '2023-10-01 10:00:00'),
+(9, 1, 1, '2023-10-01 10:00:00'),
+(10, 1, 1, '2023-10-01 10:00:00'),
+(11, 1, 1, '2023-10-01 10:00:00');  -- Dernière réservation réussie
+
+-- 12ème réservation échouée (dépassement du nombre maximal de personnes)
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (12, 1, 1, '2023-10-01 10:00:00');  -- Cette insertion doit déclencher le trigger et échouer
 VALUES (2, 1, 2, '2023-10-02 11:00:00');
 
 
