@@ -137,12 +137,6 @@ BEGIN
   DECLARE total_heures INT DEFAULT 5;
   declare heure_depuis_dernier_cours int;
 
-
-  -- DERNIER COURS IL Y A x HEURES: ('2023-10-01 15:00:00')
-  --select min(TIMESTAMPDIFF(HOUR, dateR, NEW.dateR)) into heures_depuis_dernier_cours from RESERVER where DATE(dateR) = date(NEW.dateR);
-  -- Vérifier les cours consécutifs du poney avant la nouvelle réservation
-
-
   -- Calculer le total des heures travaillées par le poney dans les 2 heures précédentes à la nouvelle réservation
   SELECT IFNULL(SUM(C.duree), 0)
   INTO total_heures
@@ -160,6 +154,30 @@ END |
 DELIMITER ;
 
 
+DELIMITER |
+create or replace trigger VerifierNiveauPersonne before insert on RESERVER FOR EACH ROW
+BEGIN
+  declare niveau_personne int;
+  declare niveau_cours int;
+
+  -- Récupérer le niveau de la personne réservée
+  SELECT niveau INTO niveau_personne
+  FROM PERSONNE
+  WHERE id_p = NEW.id_personne;
+
+  -- Récupérer le niveau du cours réservé
+  SELECT niveau INTO niveau_cours
+  FROM COURS_PROGRAMME
+  WHERE id_cp = NEW.id_cours;
+
+  -- Vérifier si le niveau de la personne est compatible avec le niveau du cours
+  IF niveau_personne < niveau_cours THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le niveau de la personne est inférieur au niveau du cours.';
+  END IF;
+END |
+DELIMITER ;
+
 -----------------------------------------------------------------
 
 -- Insertion dans COURS_PROGRAMME
@@ -167,7 +185,8 @@ INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, 
 VALUES 
 (1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
 (2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
-(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
+(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10),
+(4, 'C4', 5, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
 
 -- Insertion dans PERSONNE
 INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
@@ -198,6 +217,11 @@ VALUES (1, 1, 1, '2023-10-01 10:00:00');
 -- Insertion dans RESERVER : Test échoué (Anne pèse 85 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (2, 1, 2, '2023-10-02 11:00:00');
+
+
+-- Insertion dans RESERVER : Test échoué car niveau inférieur au niveau du cours
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (1, 1, 4, '2023-10-02 11:00:00');
 
 
  INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
