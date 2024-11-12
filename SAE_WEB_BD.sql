@@ -41,8 +41,7 @@ CREATE TABLE PONEY (
   id INT PRIMARY KEY,
   nom VARCHAR(42),
   age INT,
-  poids_max FLOAT,
-  heures_travail INT
+  poids_max FLOAT
 );
 
 -- Création de la table COURS_REALISE avec clés étrangères
@@ -103,7 +102,7 @@ BEGIN
   declare cours_consecutifs int;
   DECLARE total_heures INT DEFAULT 5;
   declare heure_depuis_dernier_cours int;
-  
+
   -- Calculer le total des heures travaillées par le poney dans les 2 heures précédentes à la nouvelle réservation
   SELECT IFNULL(SUM(C.duree), 0)
   INTO total_heures
@@ -148,12 +147,42 @@ DELIMITER ;
 
 -----------------------------------------------------------------
 
+
+
+
+DELIMITER |
+create or replace trigger VerifierNiveauPersonne before insert on RESERVER FOR EACH ROW
+BEGIN
+  declare niveau_personne int;
+  declare niveau_cours int;
+
+  -- Récupérer le niveau de la personne réservée
+  SELECT niveau INTO niveau_personne
+  FROM PERSONNE
+  WHERE id_p = NEW.id_personne;
+
+  -- Récupérer le niveau du cours réservé
+  SELECT niveau INTO niveau_cours
+  FROM COURS_PROGRAMME
+  WHERE id_cp = NEW.id_cours;
+
+  -- Vérifier si le niveau de la personne est compatible avec le niveau du cours
+  IF niveau_personne < niveau_cours THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le niveau de la personne est inférieur au niveau du cours.';
+  END IF;
+END |
+DELIMITER ;
+
+-----------------------------------------------------------------
+
 -- Insertion dans COURS_PROGRAMME
 INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
 VALUES 
 (1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
 (2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
-(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
+(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10),
+(4, 'C4', 5, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
 
 -- Insertion dans PERSONNE
 INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
@@ -172,10 +201,10 @@ VALUES
 (12, 'Personne10', 'Test', 'Adresse10', '1010101010', 'personne10@example.com', NULL, NULL, 70.0, NULL, '2023-01-10', 1);
 
 -- Insertion dans PONEY
-INSERT INTO PONEY (id, nom, age, poids_max, heures_travail)
+INSERT INTO PONEY (id, nom, age, poids_max)
 VALUES 
-(1, 'Tornado', 7, 75.0, 20),  -- Poney avec poids max de 75 kg
-(2, 'Fury', 5, 90.0, 25);      -- Poney avec poids max de 90 kg
+(1, 'Tornado', 7, 75.0),  -- Poney avec poids max de 75 kg
+(2, 'Fury', 5, 90.0);      -- Poney avec poids max de 90 kg
 
 -- Insertion dans COURS_REALISE
 INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
@@ -185,6 +214,7 @@ VALUES
 (1, 1, '2023-10-01 13:00:00'),  -- Cours pour Paul
 (1, 1, '2023-10-02 13:00:00'),  -- Cours pour Paul
 (2, 2, '2023-10-02 11:00:00');  -- Cours pour Anne
+
 
 -- Insertion dans RESERVER
 -- Réservations valides
@@ -209,3 +239,13 @@ VALUES
 -- 12ème réservation échouée (dépassement du nombre maximal de personnes)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
 VALUES (12, 1, 1, '2023-10-01 10:00:00');  -- Cette insertion doit déclencher le trigger et échouer
+VALUES (2, 1, 2, '2023-10-02 11:00:00');
+
+
+-- Insertion dans RESERVER : Test échoué car niveau inférieur au niveau du cours
+INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+VALUES (1, 1, 4, '2023-10-02 11:00:00');
+
+
+ INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
+ VALUES (1, 1, 1, '2023-10-01 13:00:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
