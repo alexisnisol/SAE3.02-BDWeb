@@ -139,11 +139,6 @@ BEGIN
   declare heure_depuis_dernier_cours int;
 
 
-  -- DERNIER COURS IL Y A x HEURES: ('2023-10-01 15:00:00')
-  --select min(TIMESTAMPDIFF(HOUR, dateR, NEW.dateR)) into heures_depuis_dernier_cours from RESERVER where DATE(dateR) = date(NEW.dateR);
-  -- Vérifier les cours consécutifs du poney avant la nouvelle réservation
-
-
   -- Calculer le total des heures travaillées par le poney dans les 2 heures précédentes à la nouvelle réservation
   SELECT IFNULL(SUM(C.duree), 0)
   INTO total_heures
@@ -172,16 +167,17 @@ DELIMITER ;
       DECLARE debut DATE;
       DECLARE fin DATE;
       DECLARE date_rea DATE;
+      DECLARE heure_deb_prog TIME;
 
 
-      SELECT Ddd, Ddf INTO debut, fin 
+      SELECT Ddd, Ddf,heure INTO debut, fin , heure_deb_prog
       FROM COURS_PROGRAMME 
       WHERE id_cp = NEW.id_cours;
 
       SET date_rea = NEW.dateR; 
 
       
-      IF date_rea < debut OR date_rea > fin THEN
+      IF date_rea < debut OR date_rea > fin OR heure_deb_prog != TIME(date_rea) THEN
           SIGNAL SQLSTATE '45000'
           SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
       END IF;
@@ -216,15 +212,12 @@ VALUES
 -- Insertion dans COURS_REALISE
 INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
 VALUES 
-(1, 1, '2023-10-01 10:00:00'),  -- Cours pour Paul
-(1, 1, '2023-10-01 12:00:00'),  -- Cours pour Paul
-(1, 1, '2023-10-01 13:00:00'),  -- Cours pour Paul
-(1, 1, '2023-10-02 13:00:00'),  -- Cours pour Paul
-(2, 2, '2023-10-02 11:00:00');  -- Cours pour Anne
+(1, 1, '2020-10-01 10:00:00'),  -- Cours pour Paul
+(2, 2, '2020-10-02 11:00:00');  -- Cours pour Anne
 
 -- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (1, 1, 1, '2023-10-01 10:00:00');
+VALUES (1, 1, 1, '2020-10-01 10:00:00');
 
 -- Insertion dans RESERVER : Test échoué (Anne pèse 85 kg, poney max 75 kg)
 INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
@@ -232,4 +225,11 @@ VALUES (2, 1, 2, '2020-10-02 11:00:00');
 
 
  INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
- VALUES (1, 1, 1, '2023-10-01 13:00:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
+ VALUES (1, 1, 1, '2020-10-01 13:00:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
+
+
+ INSERT INTO COURS_REALISE (id_cours, id_personne, dateR) VALUES 
+(3, 1, '2021-10-01 10:00:00');  -- Test échoué date en dehors de la periode du cours
+
+ INSERT INTO COURS_REALISE (id_cours, id_personne, dateR) VALUES 
+(3, 2, '2020-10-01 14:00:00');  -- Test échoué heure programmer different de heure realiser
