@@ -11,9 +11,9 @@ DROP TABLE IF EXISTS COURS_PROGRAMME;
 CREATE TABLE COURS_PROGRAMME (
   id_cp INT PRIMARY KEY AUTO_INCREMENT,
   nom_cours VARCHAR(42),
-  niveau INT,
-  duree INT CHECK (duree > 0 AND duree < 3),
-  heure TIME,
+  niveau INT CHECK(niveau > 0 AND niveau < 6),
+  duree INT CHECK(duree > 0 AND duree < 3),
+  heure TIME CHECK(heure > 0 AND heure < 25),
   jour VARCHAR(16) CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')),
   Ddd date,
   Ddf date,
@@ -30,19 +30,18 @@ CREATE TABLE PERSONNE (
   email VARCHAR(100),
   experience TEXT NULL,
   salaire DECIMAL(10, 2) NULL,
-  poids FLOAT NULL,
+  poids FLOAT NULL CHECK(poids > 9 AND poids < 51),
   cotisation DECIMAL(10, 2) NULL,
-  date_inscription date NULL,
-  niveau INT NULL
+  date_inscription date NOT NULL,
+  niveau INT NULL CHECK(niveau > 0 AND niveau < 6)
 );
 
 -- Création de la table PONEY
 CREATE TABLE PONEY (
   id INT PRIMARY KEY,
   nom VARCHAR(42),
-  age INT,
-  poids_max FLOAT,
-  heures_travail INT
+  age INT CHECK(age > 0 AND age < 26),
+  poids_max FLOAT CHECK(poids_max > 9 AND poids_max < 51)
 );
 
 -- Création de la table COURS_REALISE avec clés étrangères
@@ -96,40 +95,6 @@ DELIMITER ;
 
 
 -- Trigger : Vérifier que les poneys ont au moins 1 heure de repos après 2 heures de cours
--- DELIMITER |
--- CREATE OR REPLACE TRIGGER VerifierReposPoney
--- BEFORE INSERT ON RESERVER
--- FOR EACH ROW
--- BEGIN
---   DECLARE cours_consecutifs INT DEFAULT 0;
---   DECLARE dernier_cours DATETIME;
-
---   -- Vérifier combien de cours consécutifs le poney a donnés avant la nouvelle réservation
---   SELECT COUNT(*) INTO cours_consecutifs
---   FROM RESERVER
---   WHERE id_poney = NEW.id_poney
---   AND DATE(dateR) = DATE(NEW.dateR)  -- Vérifie uniquement la date
---   AND id_cours IN (SELECT id_cours FROM COURS_REALISE WHERE id_personne = NEW.id_personne);
-
---   -- Vérifier la dateR et l'heure du dernier cours
---   SELECT MAX(dateR) INTO dernier_cours
---   FROM RESERVER
---   WHERE id_poney = NEW.id_poney
---   AND dateR < NEW.dateR;  -- Réservations antérieures
-
---   -- Si le poney a déjà donné 2 cours consécutifs sans repos
---   IF cours_consecutifs >= 2 THEN
---     SIGNAL SQLSTATE '45000'
---     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après 2 heures de cours.';
---   END IF;
-
---   -- Si le dernier cours était à moins d'une heure de la nouvelle réservation
---   IF dernier_cours IS NOT NULL AND TIMESTAMPDIFF(MINUTE, dernier_cours, NEW.dateR) < 60 THEN
---     SIGNAL SQLSTATE '45000'
---     SET MESSAGE_TEXT = 'Erreur : le poney doit avoir au moins 1 heure de repos après le dernier cours.';
---   END IF;
--- END |
--- DELIMITER ;
 
 DELIMITER |
 create or replace trigger VerifierReposPoney before insert on RESERVER FOR EACH ROW
@@ -189,6 +154,58 @@ DELIMITER ;
 
 
 -----------------------------------------------------------------
+
+-- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierNbPersonnesMax
+BEFORE INSERT ON RESERVER
+FOR EACH ROW
+BEGIN
+  DECLARE nb_reservations INT;
+
+  -- Calculer le nombre de réservations actuelles pour le cours
+  SELECT COUNT(*)
+  INTO nb_reservations
+  FROM RESERVER
+  WHERE id_cours = NEW.id_cours
+    AND dateR = NEW.dateR;
+
+  -- Vérifier si le nombre de réservations dépasse le maximum autorisé
+  IF nb_reservations >= (SELECT nb_personnes_max FROM COURS_PROGRAMME WHERE id_cp = NEW.id_cours) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le nombre maximal de personnes pour ce cours a été atteint.';
+  END IF;
+END |
+DELIMITER ;
+
+-----------------------------------------------------------------
+
+
+
+
+DELIMITER |
+create or replace trigger VerifierNiveauPersonne before insert on RESERVER FOR EACH ROW
+BEGIN
+  declare niveau_personne int;
+  declare niveau_cours int;
+
+  -- Récupérer le niveau de la personne réservée
+  SELECT niveau INTO niveau_personne
+  FROM PERSONNE
+  WHERE id_p = NEW.id_personne;
+
+  -- Récupérer le niveau du cours réservé
+  SELECT niveau INTO niveau_cours
+  FROM COURS_PROGRAMME
+  WHERE id_cp = NEW.id_cours;
+
+  -- Vérifier si le niveau de la personne est compatible avec le niveau du cours
+  IF niveau_personne < niveau_cours THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : le niveau de la personne est inférieur au niveau du cours.';
+  END IF;
+END |
+DELIMITER ;
 
 -- Insertion dans COURS_PROGRAMME
 INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
