@@ -146,8 +146,6 @@ BEGIN
 END |
 DELIMITER ;
 
-
-
 -----------------------------------------------------------------
 
 -- Insertion dans COURS_PROGRAMME
