@@ -149,10 +149,6 @@ DELIMITER ;
   END |
   DELIMITER ;
 
-
-
-
-
 -----------------------------------------------------------------
 
 -- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
@@ -180,9 +176,6 @@ DELIMITER ;
 
 -----------------------------------------------------------------
 
-
-
-
 DELIMITER |
 create or replace trigger VerifierNiveauPersonne before insert on RESERVER FOR EACH ROW
 BEGIN
@@ -207,46 +200,75 @@ BEGIN
 END |
 DELIMITER ;
 
--- Insertion dans COURS_PROGRAMME
-INSERT INTO COURS_PROGRAMME (id_cp, nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES 
-(1, 'C1', 1, 1, '10:00:00', 'Lundi', '2020-01-01', '2020-12-31', 10),
-(2, 'C2', 1, 1, '11:00:00', 'Mardi', '2020-01-01', '2020-12-31', 10),
-(3, 'C3', 1, 2, '12:00:00', 'Mercredi', '2020-01-01', '2020-12-31', 10);
+------------------------------------------------------------------------------------------------------------------------
 
--- Insertion dans PERSONNE
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES 
-(1, 'Martin', 'Paul', '123 Rue Principale, Paris', '0102030405', 'paul.martin@example.com', '5 ans experience', NULL, 70.0, NULL, '2023-01-15', 2),
-(2, 'Dupont', 'Anne', '45 Avenue des Champs, Lyon', '0607080910', 'anne.dupont@example.com', '3 ans experience', NULL, 85.0, NULL, '2023-02-10', 3);
+  -- Vérifier que l'id du poney n'est pas déjà entrain de réaliser un autre cours à la même heure lors d'un réservation
 
--- Insertion dans PONEY
-INSERT INTO PONEY (id, nom, age, poids_max, heures_travail)
-VALUES 
-(1, 'Tornado', 7, 75.0, 20),  -- Poney avec poids max de 75 kg
-(2, 'Fury', 5, 90.0, 25);      -- Poney avec poids max de 90 kg
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
+BEFORE INSERT ON RESERVER
+FOR EACH ROW
+BEGIN
+  DECLARE poney_occupe BOOLEAN;
 
--- Insertion dans COURS_REALISE
-INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
-VALUES 
-(1, 1, '2020-10-01 10:00:00'),  -- Cours pour Paul
-(2, 2, '2020-10-02 11:00:00');  -- Cours pour Anne
+  -- Vérifier si le poney est déjà assigné à un cours à la même heure
+  SELECT EXISTS (
+    SELECT 1
+    FROM RESERVER
+    WHERE id_poney = NEW.id_poney
+      AND dateR = NEW.dateR
+  )
+  INTO poney_occupe;
 
--- Insertion dans RESERVER : Test réussi (Paul pèse 70 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (1, 1, 1, '2020-10-01 10:00:00');
+  IF poney_occupe THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
+  END IF;
+END |
+DELIMITER ;
 
--- Insertion dans RESERVER : Test échoué (Anne pèse 85 kg, poney max 75 kg)
-INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
-VALUES (2, 1, 2, '2020-10-02 11:00:00');
+------------------------------------------------------------------------------------------------------------------------
+
+  -- Vérifier que l'id du moniteur n'est pas déjà entrain d'enseigner un autre cours à la même heure
+
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
+BEFORE INSERT ON RESERVER
+FOR EACH ROW
+BEGIN
+  DECLARE moniteur_occupe BOOLEAN;
+
+  -- Vérifier si le moniteur est déjà assigné à un cours à la même heure
+  SELECT EXISTS (
+    SELECT 1
+    FROM COURS_REALISE
+    WHERE id_personne = NEW.id_personne
+      AND dateR = NEW.dateR
+  )
+  INTO moniteur_occupe;
+
+  IF moniteur_occupe THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà réservé pour un autre cours à cette heure.';
+  END IF;
+END |
+DELIMITER ;
+
+-------------------------------------------------------------------------------------------------------------------------
 
 
- INSERT INTO RESERVER (id_personne, id_poney, id_cours, dateR)
- VALUES (1, 1, 1, '2020-10-01 13:00:00');  -- Tentative d'une réservation 30 minutes après le dernier cours
+-- Insertion d'une personne
+INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
+VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
 
+-- -- Insertion d'un poney
+INSERT INTO PONEY (id, nom, age, poids_max)
+VALUES (1, 'PetitPoney', 5, 30);
 
- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR) VALUES 
-(3, 1, '2021-10-01 10:00:00');  -- Test échoué date en dehors de la periode du cours
+-- -- Insertion d'un cours
+INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
+VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
 
- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR) VALUES 
-(3, 2, '2020-10-01 14:00:00');  -- Test échoué heure programmer different de heure realiser
+-- -- Insertion d'un cours réalisé
+-- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
+-- VALUES (1, 1, '2024-11-21 10:00:00');
