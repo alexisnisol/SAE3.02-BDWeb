@@ -47,21 +47,21 @@ CREATE TABLE PONEY (
 -- Création de la table COURS_REALISE avec clés étrangères
 CREATE TABLE COURS_REALISE (
   id_cours INT NOT NULL,
-  id_personne INT NOT NULL,
+  id_moniteur INT NOT NULL,
   dateR DATETIME NOT NULL,
   PRIMARY KEY (id_cours, dateR),
   FOREIGN KEY (id_cours) REFERENCES COURS_PROGRAMME (id_cp),
-  FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p)
+  FOREIGN KEY (id_moniteur) REFERENCES PERSONNE (id_p)
 );
 
 -- Création de la table RESERVER avec clés étrangères
 CREATE TABLE RESERVER (
-  id_personne INT NOT NULL,
+  id_client INT NOT NULL,
   id_poney INT NOT NULL,
   id_cours INT NOT NULL,
   dateR DATETIME NOT NULL,
-  PRIMARY KEY (id_personne, id_poney, id_cours, dateR),
-  FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p),
+  PRIMARY KEY (id_client, id_poney, id_cours, dateR),
+  FOREIGN KEY (id_client) REFERENCES PERSONNE (id_p),
   FOREIGN KEY (id_poney) REFERENCES PONEY (id),
   FOREIGN KEY (id_cours, dateR) REFERENCES COURS_REALISE (id_cours, dateR)
 );
@@ -80,7 +80,7 @@ BEGIN
 --   -- Récupérer le poids de la personne réservée
 --   SELECT poids INTO poids_personne
 --   FROM PERSONNE
---   WHERE id_p = NEW.id_personne;
+--   WHERE id_p = NEW.id_client;
 
   -- Vérifier si le poids de la personne dépasse le poids maximum du poney
   IF poids_personne > (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney) THEN
@@ -185,7 +185,7 @@ BEGIN
   -- Récupérer le niveau de la personne réservée
   SELECT niveau INTO niveau_personne
   FROM PERSONNE
-  WHERE id_p = NEW.id_personne;
+  WHERE id_p = NEW.id_client;
 
   -- Récupérer le niveau du cours réservé
   SELECT niveau INTO niveau_cours
@@ -242,7 +242,7 @@ BEGIN
   SELECT EXISTS (
     SELECT 1
     FROM COURS_REALISE
-    WHERE id_personne = NEW.id_personne
+    WHERE id_moniteur = NEW.id_client -- ERREUR ICI
       AND dateR = NEW.dateR
   )
   INTO moniteur_occupe;
@@ -258,17 +258,17 @@ DELIMITER ;
 
 
 -- Insertion d'une personne
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
-VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
+-- INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
+-- VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
 
--- -- Insertion d'un poney
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES (1, 'PetitPoney', 5, 30);
+-- -- -- Insertion d'un poney
+-- INSERT INTO PONEY (id, nom, age, poids_max)
+-- VALUES (1, 'PetitPoney', 5, 30);
 
--- -- Insertion d'un cours
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
+-- -- -- Insertion d'un cours
+-- INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
+-- VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
 
 -- -- Insertion d'un cours réalisé
--- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
+-- INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
 -- VALUES (1, 1, '2024-11-21 10:00:00');
