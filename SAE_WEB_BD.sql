@@ -124,30 +124,35 @@ DELIMITER ;
 
   -- Verifie la date du cours_realise est bien compris dans la periode du cours programme 
 
-  DELIMITER |
-  CREATE OR REPLACE TRIGGER VerifierDatePeriode
-  BEFORE INSERT ON COURS_REALISE 
-  FOR EACH ROW
-  BEGIN 
-      DECLARE debut DATE;
-      DECLARE fin DATE;
-      DECLARE date_rea DATE;
-      DECLARE heure_deb_prog TIME;
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierDatePeriode
+BEFORE INSERT ON COURS_REALISE
+FOR EACH ROW
+BEGIN
+    DECLARE debut DATE;
+    DECLARE fin DATE;
+    DECLARE date_rea DATE;
+    DECLARE heure_deb_prog TIME;
+    DECLARE heure_rea TIME;
+
+    -- Récupérer les dates et l'heure du cours dans COURS_PROGRAMME
+    SELECT Ddd, Ddf, heure INTO debut, fin, heure_deb_prog
+    FROM COURS_PROGRAMME
+    WHERE id_cp = NEW.id_cours;
+
+    -- Extraire la date et l'heure de NEW.dateR
+    SET date_rea = DATE(NEW.dateR);
+    SET heure_rea = TIME(NEW.dateR);
+
+    -- Vérifier si la date et l'heure du cours réalisé sont dans la période définie dans COURS_PROGRAMME
+    IF date_rea < debut OR date_rea > fin OR heure_rea != heure_deb_prog THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
+    END IF;
+END |
+DELIMITER ;
 
 
-      SELECT Ddd, Ddf,heure INTO debut, fin , heure_deb_prog
-      FROM COURS_PROGRAMME 
-      WHERE id_cp = NEW.id_cours;
-
-      SET date_rea = NEW.dateR; 
-
-      
-      IF date_rea < debut OR date_rea > fin OR heure_deb_prog != TIME(date_rea) THEN
-          SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
-      END IF;
-  END |
-  DELIMITER ;
 
 -----------------------------------------------------------------
 
@@ -255,20 +260,3 @@ END |
 DELIMITER ;
 
 -------------------------------------------------------------------------------------------------------------------------
-
-
--- Insertion d'une personne
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
-VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
-
--- -- Insertion d'un poney
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES (1, 'PetitPoney', 5, 30);
-
--- -- Insertion d'un cours
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- -- Insertion d'un cours réalisé
--- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
--- VALUES (1, 1, '2024-11-21 10:00:00');
