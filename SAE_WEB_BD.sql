@@ -214,7 +214,7 @@ CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
-  DECLARE poney_occupe BOOLEAN;
+  DECLARE poney_occupe INT; -- Utiliser INT pour correspondre au résultat d'EXISTS
 
   -- Vérifier si le poney est déjà assigné à un cours à la même heure
   SELECT EXISTS (
@@ -225,7 +225,7 @@ BEGIN
   )
   INTO poney_occupe;
 
-  IF poney_occupe THEN
+  IF poney_occupe = 1 THEN -- Vérifier si le poney est occupé
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
   END IF;
@@ -234,8 +234,6 @@ DELIMITER ;
 
 ------------------------------------------------------------------------------------------------------------------------
 
-  -- Vérifier que l'id du moniteur n'est pas déjà entrain d'enseigner un autre cours à la même heure
-
 DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
 BEFORE INSERT ON RESERVER
@@ -243,11 +241,11 @@ FOR EACH ROW
 BEGIN
   DECLARE moniteur_occupe BOOLEAN;
 
-  -- Vérifier si le moniteur est déjà assigné à un cours à la même heure
+  -- Vérifier si le moniteur est déjà assigné à un autre cours à la même heure
   SELECT EXISTS (
     SELECT 1
     FROM COURS_REALISE
-    WHERE id_moniteur = NEW.id_client -- ERREUR ICI
+    WHERE id_moniteur = (SELECT id_moniteur FROM COURS_REALISE WHERE id_cp = NEW.id_cours)
       AND dateR = NEW.dateR
   )
   INTO moniteur_occupe;
@@ -261,19 +259,3 @@ DELIMITER ;
 
 -------------------------------------------------------------------------------------------------------------------------
 
-
--- Insertion d'une personne
--- INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
--- VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
-
--- -- -- Insertion d'un poney
--- INSERT INTO PONEY (id, nom, age, poids_max)
--- VALUES (1, 'PetitPoney', 5, 30);
-
--- -- -- Insertion d'un cours
--- INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
--- VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- -- Insertion d'un cours réalisé
--- INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
--- VALUES (1, 1, '2024-11-21 10:00:00');
