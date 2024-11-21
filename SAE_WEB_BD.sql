@@ -13,7 +13,7 @@ CREATE TABLE COURS_PROGRAMME (
   nom_cours VARCHAR(42),
   niveau INT CHECK(niveau > 0 AND niveau < 6),
   duree INT CHECK(duree > 0 AND duree < 3),
-  heure TIME CHECK(heure > 0 AND heure < 25),
+  heure TIME CHECK(HOUR(heure) > 0 AND HOUR(heure) < 25),
   jour VARCHAR(16) CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')),
   Ddd date,
   Ddf date,
