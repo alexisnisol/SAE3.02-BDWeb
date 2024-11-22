@@ -256,19 +256,21 @@ DELIMITER ;
 
 -------------------------------------------------------------------------------------------------------------------------
 
+-- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierEstMoniteur
+BEFORE INSERT ON COURS_REALISE
+FOR EACH ROW
+BEGIN
 
--- Insertion d'une personne
--- INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
--- VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
+  DECLARE est_moniteur BOOLEAN default false;
 
--- -- -- Insertion d'un poney
--- INSERT INTO PONEY (id, nom, age, poids_max)
--- VALUES (1, 'PetitPoney', 5, 30);
+  -- Vérifier si la personne est un moniteur
+  select (salaire IS NOT NULL) into est_moniteur from PERSONNE where id_p = NEW.id_moniteur;
 
--- -- -- Insertion d'un cours
--- INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
--- VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- -- Insertion d'un cours réalisé
--- INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
--- VALUES (1, 1, '2024-11-21 10:00:00');
+  if not est_moniteur then
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = "Erreur : la personne n'est pas un moniteur.";
+  END IF;
+END |
+DELIMITER ;
