@@ -75,18 +75,16 @@ BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
   DECLARE poids_personne FLOAT;
-  declare error_msg varchar(255);
 
---   -- Récupérer le poids de la personne réservée
---   SELECT poids INTO poids_personne
---   FROM PERSONNE
---   WHERE id_p = NEW.id_client;
+  -- Récupérer le poids de la personne réservée
+  SELECT poids INTO poids_personne
+  FROM PERSONNE
+  WHERE id_p = NEW.id_client;
 
   -- Vérifier si le poids de la personne dépasse le poids maximum du poney
   IF poids_personne > (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney) THEN
-    set error_msg = concat('Erreur : la personne ne peut pas monter sur ce poney, son poids dépasse le poids maximum. Poids de la personne : ', poids_personne, ' > ', (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney));
     SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = error_msg;
+    SET MESSAGE_TEXT = 'Erreur : la personne ne peut pas monter sur ce poney, son poids depasse le poids maximum.';
   END IF;
 END |
 DELIMITER ;
@@ -214,18 +212,16 @@ CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
-  DECLARE poney_occupe INT; -- Utiliser INT pour correspondre au résultat d'EXISTS
+  DECLARE nb_reserver INT;
 
   -- Vérifier si le poney est déjà assigné à un cours à la même heure
-  SELECT EXISTS (
-    SELECT 1
-    FROM RESERVER
-    WHERE id_poney = NEW.id_poney
-      AND dateR = NEW.dateR
-  )
-  INTO poney_occupe;
+  SELECT COUNT(*)
+  INTO nb_reserver
+  FROM RESERVER
+  WHERE id_poney = NEW.id_poney
+    AND dateR = NEW.dateR;
 
-  IF poney_occupe = 1 THEN -- Vérifier si le poney est occupé
+  IF nb_reserver > 0 THEN -- Vérifier si le poney est occupé
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
   END IF;
@@ -234,32 +230,31 @@ DELIMITER ;
 
 ------------------------------------------------------------------------------------------------------------------------
 
+-- Trigger : Vérifier que le moniteur n'est pas déjà occupé dans un autre cours réalisé à cette heure
 DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
-BEFORE INSERT ON RESERVER
+BEFORE INSERT ON COURS_REALISE
 FOR EACH ROW
 BEGIN
-  DECLARE moniteur_occupe BOOLEAN;
+  DECLARE nb_cours INT;
 
-  -- Vérifier si le moniteur est déjà assigné à un autre cours à la même heure
-  SELECT EXISTS (
-    SELECT 1
-    FROM COURS_REALISE
-    WHERE id_moniteur = (SELECT id_moniteur FROM COURS_REALISE WHERE id_cp = NEW.id_cours)
-      AND dateR = NEW.dateR
-  )
-  INTO moniteur_occupe;
+  -- Compter le nombre de cours assignés au moniteur à la même heure
+  SELECT COUNT(*)
+  INTO nb_cours
+  FROM COURS_REALISE
+  WHERE id_moniteur = NEW.id_moniteur
+    AND dateR = NEW.dateR;
 
-  IF moniteur_occupe THEN
+  IF nb_cours > 0 THEN
     SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà réservé pour un autre cours à cette heure.';
+    SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà occupé pour un autre cours à cette heure.';
   END IF;
 END |
 DELIMITER ;
 
 -------------------------------------------------------------------------------------------------------------------------
 
--- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
+-- Trigger : Vérifier si la personne qui réalise le cours est un moniteur
 DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierEstMoniteur
 BEFORE INSERT ON COURS_REALISE
