@@ -124,30 +124,35 @@ DELIMITER ;
 
   -- Verifie la date du cours_realise est bien compris dans la periode du cours programme 
 
-  DELIMITER |
-  CREATE OR REPLACE TRIGGER VerifierDatePeriode
-  BEFORE INSERT ON COURS_REALISE 
-  FOR EACH ROW
-  BEGIN 
-      DECLARE debut DATE;
-      DECLARE fin DATE;
-      DECLARE date_rea DATE;
-      DECLARE heure_deb_prog TIME;
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierDatePeriode
+BEFORE INSERT ON COURS_REALISE
+FOR EACH ROW
+BEGIN
+    DECLARE debut DATE;
+    DECLARE fin DATE;
+    DECLARE date_rea DATE;
+    DECLARE heure_deb_prog TIME;
+    DECLARE heure_rea TIME;
+
+    -- Récupérer les dates et l'heure du cours dans COURS_PROGRAMME
+    SELECT Ddd, Ddf, heure INTO debut, fin, heure_deb_prog
+    FROM COURS_PROGRAMME
+    WHERE id_cp = NEW.id_cours;
+
+    -- Extraire la date et l'heure de NEW.dateR
+    SET date_rea = DATE(NEW.dateR);
+    SET heure_rea = TIME(NEW.dateR);
+
+    -- Vérifier si la date et l'heure du cours réalisé sont dans la période définie dans COURS_PROGRAMME
+    IF date_rea < debut OR date_rea > fin OR heure_rea != heure_deb_prog THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
+    END IF;
+END |
+DELIMITER ;
 
 
-      SELECT Ddd, Ddf,heure INTO debut, fin , heure_deb_prog
-      FROM COURS_PROGRAMME 
-      WHERE id_cp = NEW.id_cours;
-
-      SET date_rea = NEW.dateR; 
-
-      
-      IF date_rea < debut OR date_rea > fin OR heure_deb_prog != TIME(date_rea) THEN
-          SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
-      END IF;
-  END |
-  DELIMITER ;
 
 -----------------------------------------------------------------
 
@@ -209,7 +214,7 @@ CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
-  DECLARE poney_occupe BOOLEAN;
+  DECLARE poney_occupe INT; -- Utiliser INT pour correspondre au résultat d'EXISTS
 
   -- Vérifier si le poney est déjà assigné à un cours à la même heure
   SELECT EXISTS (
@@ -220,7 +225,7 @@ BEGIN
   )
   INTO poney_occupe;
 
-  IF poney_occupe THEN
+  IF poney_occupe = 1 THEN -- Vérifier si le poney est occupé
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
   END IF;
@@ -229,8 +234,6 @@ DELIMITER ;
 
 ------------------------------------------------------------------------------------------------------------------------
 
-  -- Vérifier que l'id du moniteur n'est pas déjà entrain d'enseigner un autre cours à la même heure
-
 DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
 BEFORE INSERT ON RESERVER
@@ -238,11 +241,11 @@ FOR EACH ROW
 BEGIN
   DECLARE moniteur_occupe BOOLEAN;
 
-  -- Vérifier si le moniteur est déjà assigné à un cours à la même heure
+  -- Vérifier si le moniteur est déjà assigné à un autre cours à la même heure
   SELECT EXISTS (
     SELECT 1
     FROM COURS_REALISE
-    WHERE id_moniteur = NEW.id_client -- ERREUR ICI
+    WHERE id_moniteur = (SELECT id_moniteur FROM COURS_REALISE WHERE id_cp = NEW.id_cours)
       AND dateR = NEW.dateR
   )
   INTO moniteur_occupe;
