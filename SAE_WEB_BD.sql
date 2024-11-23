@@ -1,4 +1,4 @@
---Ajout des DROP
+-- Ajout des DROP
 DROP TABLE IF EXISTS RESERVER;
 DROP TABLE IF EXISTS COURS_REALISE;
 DROP TABLE IF EXISTS PONEY;
@@ -13,7 +13,7 @@ CREATE TABLE COURS_PROGRAMME (
   nom_cours VARCHAR(42),
   niveau INT CHECK(niveau > 0 AND niveau < 6),
   duree INT CHECK(duree > 0 AND duree < 3),
-  heure TIME CHECK(heure > 0 AND heure < 25),
+  heure TIME CHECK(HOUR(heure) > 0 AND HOUR(heure) < 25),
   jour VARCHAR(16) CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')),
   Ddd date,
   Ddf date,
@@ -47,21 +47,21 @@ CREATE TABLE PONEY (
 -- Création de la table COURS_REALISE avec clés étrangères
 CREATE TABLE COURS_REALISE (
   id_cours INT NOT NULL,
-  id_personne INT NOT NULL,
+  id_moniteur INT NOT NULL,
   dateR DATETIME NOT NULL,
   PRIMARY KEY (id_cours, dateR),
   FOREIGN KEY (id_cours) REFERENCES COURS_PROGRAMME (id_cp),
-  FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p)
+  FOREIGN KEY (id_moniteur) REFERENCES PERSONNE (id_p)
 );
 
 -- Création de la table RESERVER avec clés étrangères
 CREATE TABLE RESERVER (
-  id_personne INT NOT NULL,
+  id_client INT NOT NULL,
   id_poney INT NOT NULL,
   id_cours INT NOT NULL,
   dateR DATETIME NOT NULL,
-  PRIMARY KEY (id_personne, id_poney, id_cours, dateR),
-  FOREIGN KEY (id_personne) REFERENCES PERSONNE (id_p),
+  PRIMARY KEY (id_client, id_poney, id_cours, dateR),
+  FOREIGN KEY (id_client) REFERENCES PERSONNE (id_p),
   FOREIGN KEY (id_poney) REFERENCES PONEY (id),
   FOREIGN KEY (id_cours, dateR) REFERENCES COURS_REALISE (id_cours, dateR)
 );
@@ -75,18 +75,16 @@ BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
   DECLARE poids_personne FLOAT;
-  declare error_msg varchar(255);
 
---   -- Récupérer le poids de la personne réservée
---   SELECT poids INTO poids_personne
---   FROM PERSONNE
---   WHERE id_p = NEW.id_personne;
+  -- Récupérer le poids de la personne réservée
+  SELECT poids INTO poids_personne
+  FROM PERSONNE
+  WHERE id_p = NEW.id_client;
 
   -- Vérifier si le poids de la personne dépasse le poids maximum du poney
   IF poids_personne > (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney) THEN
-    set error_msg = concat('Erreur : la personne ne peut pas monter sur ce poney, son poids dépasse le poids maximum. Poids de la personne : ', poids_personne, ' > ', (SELECT poids_max FROM PONEY WHERE id = NEW.id_poney));
     SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = error_msg;
+    SET MESSAGE_TEXT = 'Erreur : la personne ne peut pas monter sur ce poney, son poids depasse le poids maximum.';
   END IF;
 END |
 DELIMITER ;
@@ -124,30 +122,35 @@ DELIMITER ;
 
   -- Verifie la date du cours_realise est bien compris dans la periode du cours programme 
 
-  DELIMITER |
-  CREATE OR REPLACE TRIGGER VerifierDatePeriode
-  BEFORE INSERT ON COURS_REALISE 
-  FOR EACH ROW
-  BEGIN 
-      DECLARE debut DATE;
-      DECLARE fin DATE;
-      DECLARE date_rea DATE;
-      DECLARE heure_deb_prog TIME;
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierDatePeriode
+BEFORE INSERT ON COURS_REALISE
+FOR EACH ROW
+BEGIN
+    DECLARE debut DATE;
+    DECLARE fin DATE;
+    DECLARE date_rea DATE;
+    DECLARE heure_deb_prog TIME;
+    DECLARE heure_rea TIME;
+
+    -- Récupérer les dates et l'heure du cours dans COURS_PROGRAMME
+    SELECT Ddd, Ddf, heure INTO debut, fin, heure_deb_prog
+    FROM COURS_PROGRAMME
+    WHERE id_cp = NEW.id_cours;
+
+    -- Extraire la date et l'heure de NEW.dateR
+    SET date_rea = DATE(NEW.dateR);
+    SET heure_rea = TIME(NEW.dateR);
+
+    -- Vérifier si la date et l'heure du cours réalisé sont dans la période définie dans COURS_PROGRAMME
+    IF date_rea < debut OR date_rea > fin OR heure_rea != heure_deb_prog THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
+    END IF;
+END |
+DELIMITER ;
 
 
-      SELECT Ddd, Ddf,heure INTO debut, fin , heure_deb_prog
-      FROM COURS_PROGRAMME 
-      WHERE id_cp = NEW.id_cours;
-
-      SET date_rea = NEW.dateR; 
-
-      
-      IF date_rea < debut OR date_rea > fin OR heure_deb_prog != TIME(date_rea) THEN
-          SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
-      END IF;
-  END |
-  DELIMITER ;
 
 -----------------------------------------------------------------
 
@@ -185,7 +188,7 @@ BEGIN
   -- Récupérer le niveau de la personne réservée
   SELECT niveau INTO niveau_personne
   FROM PERSONNE
-  WHERE id_p = NEW.id_personne;
+  WHERE id_p = NEW.id_client;
 
   -- Récupérer le niveau du cours réservé
   SELECT niveau INTO niveau_cours
@@ -209,18 +212,16 @@ CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
 BEGIN
-  DECLARE poney_occupe BOOLEAN;
+  DECLARE nb_reserver INT;
 
   -- Vérifier si le poney est déjà assigné à un cours à la même heure
-  SELECT EXISTS (
-    SELECT 1
-    FROM RESERVER
-    WHERE id_poney = NEW.id_poney
-      AND dateR = NEW.dateR
-  )
-  INTO poney_occupe;
+  SELECT COUNT(*)
+  INTO nb_reserver
+  FROM RESERVER
+  WHERE id_poney = NEW.id_poney
+    AND dateR = NEW.dateR;
 
-  IF poney_occupe THEN
+  IF nb_reserver > 0 THEN -- Vérifier si le poney est occupé
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
   END IF;
@@ -229,46 +230,45 @@ DELIMITER ;
 
 ------------------------------------------------------------------------------------------------------------------------
 
-  -- Vérifier que l'id du moniteur n'est pas déjà entrain d'enseigner un autre cours à la même heure
-
+-- Trigger : Vérifier que le moniteur n'est pas déjà occupé dans un autre cours réalisé à cette heure
 DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
-BEFORE INSERT ON RESERVER
+BEFORE INSERT ON COURS_REALISE
 FOR EACH ROW
 BEGIN
-  DECLARE moniteur_occupe BOOLEAN;
+  DECLARE nb_cours INT;
 
-  -- Vérifier si le moniteur est déjà assigné à un cours à la même heure
-  SELECT EXISTS (
-    SELECT 1
-    FROM COURS_REALISE
-    WHERE id_personne = NEW.id_personne
-      AND dateR = NEW.dateR
-  )
-  INTO moniteur_occupe;
+  -- Compter le nombre de cours assignés au moniteur à la même heure
+  SELECT COUNT(*)
+  INTO nb_cours
+  FROM COURS_REALISE
+  WHERE id_moniteur = NEW.id_moniteur
+    AND dateR = NEW.dateR;
 
-  IF moniteur_occupe THEN
+  IF nb_cours > 0 THEN
     SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà réservé pour un autre cours à cette heure.';
+    SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà occupé pour un autre cours à cette heure.';
   END IF;
 END |
 DELIMITER ;
 
 -------------------------------------------------------------------------------------------------------------------------
 
+-- Trigger : Vérifier si la personne qui réalise le cours est un moniteur
+DELIMITER |
+CREATE OR REPLACE TRIGGER VerifierEstMoniteur
+BEFORE INSERT ON COURS_REALISE
+FOR EACH ROW
+BEGIN
 
--- Insertion d'une personne
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, date_inscription, niveau)
-VALUES (1, 'Dupont', 'Alice', '12 rue de Paris', '0123456789', 'alice.dupont@email.com', '2024-11-21', 3);
+  DECLARE est_moniteur BOOLEAN default false;
 
--- -- Insertion d'un poney
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES (1, 'PetitPoney', 5, 30);
+  -- Vérifier si la personne est un moniteur
+  select (salaire IS NOT NULL) into est_moniteur from PERSONNE where id_p = NEW.id_moniteur;
 
--- -- Insertion d'un cours
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- -- Insertion d'un cours réalisé
--- INSERT INTO COURS_REALISE (id_cours, id_personne, dateR)
--- VALUES (1, 1, '2024-11-21 10:00:00');
+  if not est_moniteur then
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = "Erreur : la personne n'est pas un moniteur.";
+  END IF;
+END |
+DELIMITER ;
