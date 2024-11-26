@@ -1,0 +1,66 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+footer {
+    background-color: #001f3f; /* Couleur de fond bleu foncé */
+    color: #ffffff; /* Couleur de texte blanche */
+    display: flex;
+    flex-wrap: wrap; /* Permet de s'ajuster pour les petits écrans */
+    justify-content: space-between;
+    align-items: flex-start; /* Aligne les éléments en haut */
+    padding: 2rem;
+    text-align: center;
+}
+
+footer .col1, footer .col2, footer .col3 {
+    flex: 1; /* Répartit l'espace entre les colonnes */
+    margin: 1rem; /* Espacement autour des colonnes */
+    min-width: 20%; /* Largeur minimale relative */
+    display: flex;
+    flex-direction: column; /* Empile le contenu verticalement */
+    align-items: center; /* Centre les titres et contenus */
+
+}
+
+footer h3 {
+    font-size: 1.5rem; /* Taille du titre relative à la racine */
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    width: fit-content; /* Ajuste la largeur autour du texte */
+}
+
+footer .col1 img {
+    width: 20%; /* Ajuste la largeur de l'image en pourcentage */
+    max-width: 100%; /* Empêche l'image de dépasser la taille du conteneur */
+    margin-top: 1rem;
+}
+
+footer ul {
+    list-style-type: none; /* Supprime les puces */
+    padding: 0;
+    margin: 0;
+}
+
+footer ul li {
+    margin: 0.5rem 0; /* Espacement entre les éléments de la liste */
+    font-size: 1rem; /* Taille du texte relative */
+}
+
+footer p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem; /* Taille légèrement plus petite */
+}
+
+footer .horizontal {
+    flex-basis: 100%; /* Occupe toute la largeur */
+    margin-top: 2rem;
+    border-top: 0.1rem solid #ffffff; /* Ligne horizontale blanche */
+    padding-top: 1rem;
+    text-align: center;
+}
