@@ -10,7 +10,7 @@ function isUserLoggedIn(){
 
 function checkUserLoggedIn(){
     if(!isUserLoggedIn()){
-        header('Location: /');
+        header('Location: /index.php');
     }
 }
 
