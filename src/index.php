@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="./static/css/header.css">
+    <link rel="stylesheet" href="./static/css/footer.css">
     <title>Accueil</title>
 </head>
 <body>
+<?php include '_inc/header.php'?>
     <!-- Section avec l'image de fond, h1 et paragraphe -->
     <section class="hero">
         <div class="hero-content">
@@ -65,5 +68,6 @@
             <script src="./static/js/carousel.js"></script>
         </div>
     </div>
+    <?php include '_inc/footer.php'?>
 </body>
 </html>
