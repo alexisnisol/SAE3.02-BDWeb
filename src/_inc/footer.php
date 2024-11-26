@@ -5,7 +5,7 @@
         <H3>
             Les Cavaliers de l'IUT
         </H3>
-        <img src="static/images/logo.png" alt="logo">
+        <img src="/static/images/logo.png" alt="logo">
     </div>
 
     <div class = "col2">
