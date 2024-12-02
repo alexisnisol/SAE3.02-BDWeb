@@ -1,6 +1,8 @@
 <?php
 
-    require_once '../../_inc/auth.php';
+    define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+    
+    require_once ROOT . '/_inc/auth.php';
 
     //if is post request
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -23,7 +25,7 @@
     <title>Connexion</title>
 </head>
 <body>
-    <?php include '../../_inc/header.php'?>
+    <?php include ROOT . '/_inc/header.php'?>
     <main class="login">
         <div class="login-container">
             <h2>Se connecter</h2>
@@ -47,5 +49,5 @@
     </main>
 </body>
 
-<?php include '../../_inc/footer.php'?>
+<?php include ROOT . '/_inc/footer.php'?>
 </html>
