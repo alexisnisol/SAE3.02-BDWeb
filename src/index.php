@@ -1,3 +1,12 @@
+<?php
+
+define('ROOT', dirname(__DIR__));
+
+require ROOT . '/app/App.php';
+
+App::loadApp();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
