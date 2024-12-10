@@ -1,6 +1,6 @@
 <?php
 
-define('ROOT', dirname(__DIR__));
+define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
 require ROOT . '/app/App.php';
 
