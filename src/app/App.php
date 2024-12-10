@@ -6,7 +6,7 @@ use Core\Database\MySQLDatabase;
 class App {
 
     private $db;
-    private $app;
+    private static $app;
 
     public static function getApp() {
         if (is_null(self::$app)) {
@@ -14,7 +14,7 @@ class App {
         }
 
         return self::$app;
-    }
+    } 
 
     public static function loadApp() {
         session_start();
