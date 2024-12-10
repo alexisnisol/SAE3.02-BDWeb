@@ -3,6 +3,7 @@
 namespace Core\Database;
 
 use PDO;
+use PDOException;
 
 class SQLiteDatabase implements Database
 {
@@ -11,13 +12,19 @@ class SQLiteDatabase implements Database
 
     public function __construct($db_file) {
         $this->db_file = $db_file;
+
+        $this->getPDO();
     }
 
     private function getPDO()
     {
         if ($this->pdo === null) {
-            $pdo = new PDO("sqlite:{$this->db_file}");
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                $pdo = new PDO("sqlite:{$this->db_file}");
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo 'Connexion à la BD échouée : ' . $e->getMessage();
+            }
         }
         return $this->pdo;
     }
