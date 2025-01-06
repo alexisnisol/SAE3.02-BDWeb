@@ -40,12 +40,6 @@ class Router
             case 'home':
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
-            case 'about':
-                self::render('about.php', 'À propos', ['about.css']);
-                break;
-            case 'contact':
-                self::render('contact.php', 'Contact', ['contact.css']);
-                break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;
