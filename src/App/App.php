@@ -1,7 +1,8 @@
 <?php
 
 use Config\ConfigBD;
-use Core\Database\MySQLDatabase;
+use App\Database\MySQLDatabase;
+use App\Autoloader;
 
 class App {
 
@@ -19,26 +20,23 @@ class App {
     public static function loadApp() {
         session_start();
 
-        require ROOT . '/Core/Autoloader.php';
+        require ROOT . '/App/Autoloader.php';
 
-        \Core\Autoloader::register();
+        Autoloader::register();
 
         self::getApp()->loadDB();
     }
 
     private function loadDB() {
         if ($this->db === null) {
-            $config = ConfigBD::getConfig();
-            $this->db = new MySQLDatabase($config['db_name'], $config['db_user'], $config['db_pass'], $config['db_host']);
+            $this->db = new MySQLDatabase(ConfigBD::$DB_NAME, ConfigBD::$DB_USER, ConfigBD::$DB_PASSWORD, ConfigBD::$DB_HOST);
+            $this->db->loadContents();
         }
     }
 
     public function getDB() {
         return $this->db;
     }
-
-
-
 }
 
 ?>

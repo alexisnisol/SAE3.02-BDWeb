@@ -2,7 +2,7 @@
 
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
-require ROOT . '/app/App.php';
+require ROOT . '/App/App.php';
 
 App::loadApp();
 ?>
