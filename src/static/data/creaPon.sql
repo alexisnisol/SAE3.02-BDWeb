@@ -22,7 +22,7 @@ CREATE TABLE COURS_PROGRAMME (
 
 -- Création de la table PERSONNE
 CREATE TABLE PERSONNE (
-  id_p INT PRIMARY KEY,
+  id_p INT PRIMARY KEY AUTO_INCREMENT,
   nom VARCHAR(42),
   prenom VARCHAR(42),
   adresse VARCHAR(100),
@@ -38,7 +38,7 @@ CREATE TABLE PERSONNE (
 
 -- Création de la table PONEY
 CREATE TABLE PONEY (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   nom VARCHAR(42),
   age INT CHECK(age > 0 AND age < 26),
   poids_max FLOAT CHECK(poids_max > 9 AND poids_max < 51)
