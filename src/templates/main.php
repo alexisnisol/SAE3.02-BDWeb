@@ -25,7 +25,7 @@
             <ul>
     <li><a href="./index.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && !isset($_GET['action']) || ($_GET['action'] == 'home')) ? 'active' : ''; ?>">Accueil</a></li>
             <li><a href="index.php?action=planning" class="<?php echo ($_GET['action'] == 'planning') ? 'active' : ''; ?>">Planning</a></li>
-            <li><a href="index.php?action=inscription" class="<?php echo ($_GET['action'] == 'inscription') ? 'active' : ''; ?>">Inscription</a></li>
+            <li><a href="index.php?action=register" class="<?php echo ($_GET['action'] == 'register') ? 'active' : ''; ?>">Inscription</a></li>
                 
             </ul>
         </nav>

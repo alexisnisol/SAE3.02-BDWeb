@@ -40,6 +40,15 @@ class Router
             case 'home':
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
+            case 'login':
+                self::render('auth/login.php', 'Connexion', ['auth.css']);
+                break;
+            case 'register':
+                self::render('auth/register.php', 'Inscription', ['auth.css']);
+                break;
+            case 'logout':
+                self::render('auth/logout.php', 'Deconnexion', []);
+                break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;
