@@ -6,61 +6,60 @@
 }
 
 footer {
-    background-color: #001f3f; /* Couleur de fond bleu foncé */
-    color: #ffffff; /* Couleur de texte blanche */
+    background-color: #001f3f;
+    color: #ffffff;
     display: flex;
-    flex-wrap: wrap; /* Permet de s'ajuster pour les petits écrans */
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-start; /* Aligne les éléments en haut */
-    padding: 2rem;
+    align-items: flex-start; 
     text-align: center;
+    margin-top: 5%;
 }
 
 footer .col1, footer .col2, footer .col3 {
-    flex: 1; /* Répartit l'espace entre les colonnes */
-    margin: 1rem; /* Espacement autour des colonnes */
-    min-width: 20%; /* Largeur minimale relative */
+    flex: 1;
+    margin: 1rem;
+    min-width: 20%;
     display: flex;
-    flex-direction: column; /* Empile le contenu verticalement */
-    align-items: center; /* Centre les titres et contenus */
+    flex-direction: column;
+    align-items: center;
 
 }
 
 footer h3 {
-    font-size: 1.5rem; /* Taille du titre relative à la racine */
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     text-align: center;
     padding-bottom: 0.5rem;
-    width: fit-content; /* Ajuste la largeur autour du texte */
+    width: fit-content;
 }
 
 footer .col1 img {
-    width: 20%; /* Ajuste la largeur de l'image en pourcentage */
-    max-width: 100%; /* Empêche l'image de dépasser la taille du conteneur */
+    width: 20%;
+    max-width: 100%;
     margin-top: 1rem;
 }
 
 footer ul {
-    list-style-type: none; /* Supprime les puces */
+    list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
 footer ul li {
-    margin: 0.5rem 0; /* Espacement entre les éléments de la liste */
-    font-size: 1rem; /* Taille du texte relative */
+    margin: 0.5rem 0;
+    font-size: 1rem;
 }
-
 footer p {
     margin: 0.5rem 0;
-    font-size: 0.9rem; /* Taille légèrement plus petite */
+    font-size: 0.9rem;
 }
 
 footer .horizontal {
-    flex-basis: 100%; /* Occupe toute la largeur */
+    flex-basis: 100%; 
     margin-top: 2rem;
-    border-top: 0.1rem solid #ffffff; /* Ligne horizontale blanche */
+    border-top: 0.1rem solid #ffffff;
     padding-top: 1rem;
     text-align: center;
 }

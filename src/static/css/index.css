@@ -1,4 +1,4 @@
-/* Réinitialisation des marges et paddings */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +6,6 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Style pour la section avec l'image de fond */
 .hero {
     position: relative;
     height: 75vh;
@@ -51,7 +50,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* Style pour la section avec texte à gauche et image à droite */
 .section-with-image-right {
     display: flex;
     align-items: center;
@@ -110,8 +108,7 @@
     object-fit: cover;
 }
 
-/**********************************************************/
-/* Section globale */
+
 .section-poneys {
     text-align: center;
     padding: 50px 20px;
@@ -124,7 +121,6 @@
     color: #333;
 }
 
-/* Conteneur principal */
 .poney-carousel {
     position: relative;
     width: 100%;
@@ -138,7 +134,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Conteneur des éléments du carrousel */
+
 .carousel-track-container {
     overflow: hidden;
     width: 100%;
@@ -149,9 +145,8 @@
     transition: transform 0.5s ease-in-out;
 }
 
-/* Boîte d'un poney */
 .poney-box {
-    flex: 0 0 100%; /* Un seul élément visible */
+    flex: 0 0 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -168,7 +163,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Description des poneys */
+
 .poney-description {
     background-color: #f5f5f5;
     border-radius: 10px;
@@ -188,7 +183,7 @@
     line-height: 1.6;
 }
 
-/* Boutons de navigation */
+
 .carousel-btn {
     background-color: #333;
     color: white;
