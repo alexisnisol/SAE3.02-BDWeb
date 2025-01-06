@@ -66,11 +66,8 @@ CREATE TABLE RESERVER (
   FOREIGN KEY (id_cours, dateR) REFERENCES COURS_REALISE (id_cours, dateR)
 );
 
-----------------------------------------------------
-
 -- Trigger : Poids max du client ne doit pas dépasser le poids max supportable par le poney
 
-DELIMITER |
 CREATE OR REPLACE TRIGGER VerifierPoidsPoney
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
@@ -87,15 +84,10 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : la personne ne peut pas monter sur ce poney, son poids depasse le poids maximum.';
   END IF;
-END |
-DELIMITER ;
-
---------------------------------------------------
-
+END;
 
 -- Trigger : Vérifier que les poneys ont au moins 1 heure de repos après 2 heures de cours
 
-DELIMITER |
 create or replace trigger VerifierReposPoney before insert on RESERVER FOR EACH ROW
 BEGIN
   declare cours_consecutifs int;
@@ -116,14 +108,11 @@ BEGIN
       SIGNAL SQLSTATE '45000'
       SET MESSAGE_TEXT = 'Le poney doit avoir une heure de repos après deux heures de travail consécutif.';
   END IF;
-END |
-DELIMITER ;
-
------------------------------------------------------------------
+END;
 
 -- Trigger : Verifie la date du cours_realise est bien compris dans la periode du cours programme 
 
-DELIMITER |
+
 CREATE OR REPLACE TRIGGER VerifierDatePeriode
 BEFORE INSERT ON COURS_REALISE
 FOR EACH ROW
@@ -148,16 +137,12 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "Erreur : la date du cours est en dehors des dates programmées";
     END IF;
-END |
-DELIMITER ;
+END;
 
-
-
------------------------------------------------------------------
 
 -- Trigger : nb_personnes_max pas dépassé pour la reservation d'un cours
 
-DELIMITER |
+
 CREATE OR REPLACE TRIGGER VerifierNbPersonnesMax
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
@@ -176,14 +161,13 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : le nombre maximal de personnes pour ce cours a été atteint.';
   END IF;
-END |
-DELIMITER ;
+END;
 
------------------------------------------------------------------
+
 
 -- Trigger : Vérifie que le niveau de la personne est valable par rapport au cours réservé.
 
-DELIMITER |
+
 create or replace trigger VerifierNiveauPersonne before insert on RESERVER FOR EACH ROW
 BEGIN
   declare niveau_personne int;
@@ -204,14 +188,14 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : le niveau de la personne est inférieur au niveau du cours.';
   END IF;
-END |
-DELIMITER ;
+END;
 
-------------------------------------------------------------------------------------------------------------------------
+
+
 
 -- Trigger : Vérifier que l'id du poney n'est pas déjà entrain de réaliser un autre cours à la même heure lors d'un réservation
 
-DELIMITER |
+
 CREATE OR REPLACE TRIGGER VerifierPoneyOccupe
 BEFORE INSERT ON RESERVER
 FOR EACH ROW
@@ -229,14 +213,14 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le poney est déjà réservé pour un autre cours à cette heure.';
   END IF;
-END |
-DELIMITER ;
+END;
 
-------------------------------------------------------------------------------------------------------------------------
+
+
 
 -- Trigger : Vérifier que le moniteur n'est pas déjà occupé dans un autre cours réalisé à cette heure
 
-DELIMITER |
+
 CREATE OR REPLACE TRIGGER VerifierMoniteurOccupe
 BEFORE INSERT ON COURS_REALISE
 FOR EACH ROW
@@ -254,14 +238,14 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Erreur : Le moniteur est déjà occupé pour un autre cours à cette heure.';
   END IF;
-END |
-DELIMITER ;
+END;
 
--------------------------------------------------------------------------------------------------------------------------
+
+
 
 -- Trigger : Vérifier si la personne qui réalise le cours est un moniteur
 
-DELIMITER |
+
 CREATE OR REPLACE TRIGGER VerifierEstMoniteur
 BEFORE INSERT ON COURS_REALISE
 FOR EACH ROW
@@ -276,5 +260,5 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = "Erreur : la personne n'est pas un moniteur.";
   END IF;
-END |
-DELIMITER ;
+END;
+
