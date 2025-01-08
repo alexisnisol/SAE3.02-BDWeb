@@ -1,3 +1,7 @@
+<?php
+use App\Auth\Auth;
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,12 +29,29 @@
             <ul>
     <li><a href="./index.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && !isset($_GET['action']) || ($_GET['action'] == 'home')) ? 'active' : ''; ?>">Accueil</a></li>
             <li><a href="index.php?action=planning" class="<?php echo ($_GET['action'] == 'planning') ? 'active' : ''; ?>">Planning</a></li>
-            <li><a href="index.php?action=register" class="<?php echo ($_GET['action'] == 'register') ? 'active' : ''; ?>">Inscription</a></li>
-                
+            <?php 
+                if (!Auth::isUserLoggedIn()) {
+            ?>
+                    <li><a href="index.php?action=register" class="<?php echo ($_GET['action'] == 'register') ? 'active' : ''; ?>">Inscription</a></li>
+            <?php 
+                }
+            ?>
             </ul>
         </nav>
         <div class="actions">
-            <a href="index.php?action=login"> Connexion</a>
+            <?php 
+                if (Auth::isUserLoggedIn()) {
+                    echo '<p>Bonjour ' . Auth::getCurrentUser()['name'] . '</p>';
+                    
+                    if(Auth::getCurrentUserObj()->isInstructor()) {
+                        echo '<a href="index.php?action=dashboard">Dashboard</a>';
+                    }
+
+                    echo '<a href="index.php?action=logout">Déconnexion</a>';
+                } else {
+                    echo '<a href="index.php?action=login">Connexion</a>';
+                }
+            ?>
         </div>
     </header>
 

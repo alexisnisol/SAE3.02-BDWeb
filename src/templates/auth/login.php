@@ -1,15 +1,14 @@
 <?php
-    
-    require_once ROOT . '/_inc/auth.php';
 
-    //if is post request
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        //get post data
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $error = checkLoginForm($email, $password);
-    }
+use App\Auth\AuthForm;
 
+//if is post request
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    //get post data
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $error = AuthForm::checkLoginForm($email, $password);
+}
 ?>
 
 <div class="login">

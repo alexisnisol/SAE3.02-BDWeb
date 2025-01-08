@@ -1,14 +1,20 @@
 <?php
 
-    require_once ROOT . '/_inc/auth.php';
+use App\Auth\AuthForm;
 
-    //if is post request
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        //get post data
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $error = checkLoginForm($email, $password);
-    }
+//if is post request
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    //get post data
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $address = $_POST['address'];
+    $phone = $_POST['phone'];
+    $level = $_POST['level'];
+    $weight = $_POST['weight'];
+    $error = AuthForm::checkRegisterForm($email, $password, $firstName, $lastName, $address, $phone, $level, $weight);
+}
 
 ?>
 
@@ -19,41 +25,48 @@
         <form action="#" method="post">
             <div class="input-row">
                 <div class="input-container">
-                    <input type="text" placeholder="Prénom" required>
+                    <input type="text" placeholder="Prénom" name="firstName" required>
                 </div>
                 <div class="input-container">
-                    <input type="text" placeholder="Nom" required>
+                    <input type="text" placeholder="Nom" name="lastName" required>
                 </div>
             </div>
             
             <div class="input-container">
-                <input type="text" placeholder="Adresse" required>
+                <input type="text" placeholder="Adresse" name="address" required>
             </div>
             
             <div class="input-container">
-                <input type="tel" placeholder="Numéro de téléphone" required>
+                <input type="tel" placeholder="Numéro de téléphone" name="phone" pattern="[0-9]{10}" required>
             </div>
             
-            <div class="input-container">
-                <input type="email" placeholder="Adresse mail" required>
-            </div>
-
             <div class="input-row">
                 <div class="input-container">
-                    <select required>
+                    <select name="level" required>
                         <option value="" disabled selected>Niveau</option>
-                        <option value="debutant">Débutant</option>
-                        <option value="intermediaire">Intermédiaire</option>
-                        <option value="avance">Avancé</option>
+                        <option value="1">Débutant</option>
+                        <option value="2">Intermédiaire</option>
+                        <option value="3">Avancé</option>
                     </select>
                 </div>
                 <div class="input-container">
-                    <input type="number" placeholder="Poids" min="0" required>
+                    <input type="number" placeholder="Poids" min="0" name="weight" required>
                 </div>
             </div>
+
             <div class="input-container">
-                <input type="text" placeholder="Coût de l'inscription : xx" required>
+                <input type="email" placeholder="Adresse mail" name="email" required>
             </div>
+
+            <div class="input-container">
+                <input type="password" placeholder="Mot de passe" name="password" required>
+            </div>
+
+            <?php 
+            if (isset($error)) {
+                echo '<p class="error-message">*' . $error . '</p>';
+            }
+            ?>
             <button type="submit">S'inscrire</button>
         </form>
 
