@@ -28,12 +28,13 @@ CREATE TABLE PERSONNE (
   adresse VARCHAR(100),
   telephone VARCHAR(15),
   email VARCHAR(100),
+  mdp VARCHAR(64),
   experience TEXT NULL,
   salaire DECIMAL(10, 2) NULL,
   poids FLOAT NULL CHECK(poids > 9 AND poids < 51),
   cotisation DECIMAL(10, 2) NULL,
-  date_inscription date NOT NULL,
-  niveau INT NULL CHECK(niveau > 0 AND niveau < 6)
+  date_inscription date DEFAULT CURRENT_DATE,
+  niveau INT NULL CHECK(niveau > 0 AND niveau < 4)
 );
 
 -- Création de la table PONEY
