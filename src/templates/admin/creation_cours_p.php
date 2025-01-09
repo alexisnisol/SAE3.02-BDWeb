@@ -5,15 +5,9 @@
             <label for="nom_cours">Nom du cours</label>
             <input type="text" id="nom_cours" name="nom_cours" maxlength="42" required>
 
-            
-            <select id="niveau" name="niveau" required>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
             <div class="input-container">
                 <label for="niveau">Niveau</label>
-                <select name="level" required>
+                <select id="niveau" name="niveau" required>
                     <option value="" disabled selected>Niveau</option>
                     <option value="1">Débutant</option>
                     <option value="2">Intermédiaire</option>
