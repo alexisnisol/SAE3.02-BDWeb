@@ -11,8 +11,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 }
 ?>
 
-<div class="login">
-    <div class="login-container">
+<div class="page">
+    <div class="form-container">
         <h2>Se connecter</h2>
         <form action="#" method="post">
             <div class="input-container">

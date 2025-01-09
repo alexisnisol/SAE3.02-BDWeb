@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 ?>
 
-<div class="login">
-    <div class="login-container">
+<div class="page">
+    <div class="form-container">
         <h2>S'inscrire maintenant</h2>
         
         <form action="#" method="post">
@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     </select>
                 </div>
                 <div class="input-container">
-                    <input type="number" placeholder="Poids" min="0" name="weight" required>
+                    <input type="number" placeholder="Poids" min="10" max="50" name="weight" required>
                 </div>
             </div>
 
