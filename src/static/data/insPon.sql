@@ -38,13 +38,13 @@ VALUES
   ('Cours de Dressage', 4, 2, '11:00:00', 'Jeudi', '2024-12-09', '2024-12-15', 2),
   ('Cours de Découverte', 1, 1, '10:00:00', 'Vendredi', '2024-12-09', '2024-12-15', 3),
   ('Cours de Saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-06', 5),
-  ('Cours Longue Durée', 2, 3, '15:00:00', 'Samedi', '2024-12-16', '2024-12-31', 4),
-  ('Cours de Dressage' , 2,1 , '10:00:00', 'Lundi', '2025-01-01', '2025-06-31', 3),
+  ('Cours Longue Durée', 2, 2, '15:00:00', 'Samedi', '2024-12-16', '2024-12-31', 4),
+  ('Cours de Dressage' , 2,1, '10:00:00', 'Lundi', '2025-01-01', '2025-06-31', 3),
   ('Cours Avancé', 3, 2, '14:00:00', 'Mardi', '2025-01-01', '2025-06-31', 3),
   ('Cours Debutant', 1, 1, '09:00:00', 'Mercredi', '2025-01-01', '2025-06-31', 5),
   ('Cours de Saut', 4, 2, '11:00:00', 'Jeudi', '2025-01-01', '2025-06-31', 2),
   ('Cours de Découverte', 1, 1, '10:00:00', 'Vendredi', '2025-01-01', '2025-06-31', 3),
-  ('Cours Longue Durée', 2, 3, '15:00:00', 'Samedi', '2025-01-01', '2025-06-31', 4);
+  ('Cours Longue Durée', 2, 2, '15:00:00', 'Samedi', '2025-01-01', '2025-06-31', 4);
 
 -- Insertion dans COURS_REALISE
 -- Ajout des cours réalisés en fonction des plages

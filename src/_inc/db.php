@@ -31,23 +31,26 @@
         global $bd;
 
         $stmt = $bd->query("
-            SELECT 
-                cp.jour, 
-                cp.heure, 
-                cp.nom_cours, 
-                cp.niveau, 
-                cp.duree, 
-                cp.nb_personnes_max, 
+            SELECT
+                cp.id_cp,
+                cp.nom_cours,
+                cp.niveau,
+                cp.duree,
+                cp.heure,
+                cp.jour,
+                cp.Ddd,
+                cp.Ddf,
+                cp.nb_personnes_max,
                 p.nom || ' ' || p.prenom AS nom_moniteur,
                 cr.dateR,
-                cp.id_cp 
+                cp.id_cp
             FROM COURS_PROGRAMME cp
             LEFT JOIN COURS_REALISE cr ON cp.id_cp = cr.id_cours
             LEFT JOIN PERSONNE p ON cr.id_moniteur = p.id_p
             LEFT JOIN RESERVER r ON cp.id_cp = r.id_cours
-            GROUP BY 
+            GROUP BY
                 cp.id_cp, cp.jour, cp.heure, cp.nom_cours, cp.niveau, cp.duree, cp.nb_personnes_max, p.nom, p.prenom, cr.dateR
-            ORDER BY 
+            ORDER BY
                 CASE cp.jour
                     WHEN 'Lundi' THEN 1
                     WHEN 'Mardi' THEN 2
@@ -126,14 +129,18 @@
     
             $places_restantes = get_Places_Restantes($id_cours);
 
+            $niveau_client = get_niveau_client($id_client);
+            $niveau_cours = get_niveau_cours($id_cours);
             
-                
-            if ($places_restantes > 0) {
+            if ($niveau_client < $niveau_cours) {
+                echo json_encode(['success' => false, 'message' => 'Votre niveau est insuffisant pour ce cours']);
+            } elseif ($places_restantes > 0) {
                 try {
                 insert_reservation($id_client, $id_cours, $id_poney, $date);
                 echo json_encode([
                     'success' => true,
                     'message' => 'Réservation effectuée',
+                    
                 ]);
             } catch (PDOException $e) {
                 echo json_encode(['success' => false, 'message' => 'Erreur lors de la réservation']);
@@ -145,6 +152,21 @@
         }
     }
 
+    function get_niveau_cours($id_cours){
+        global $bd;
+        $stmt = $bd->prepare("SELECT niveau FROM COURS_PROGRAMME WHERE id_cp = :id_cours");
+        $stmt->execute(['id_cours' => $id_cours]);
+        $niveau = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $niveau['niveau'];
+    }
+
+    function get_niveau_client($id_client){
+        global $bd;
+        $stmt = $bd->prepare("SELECT niveau FROM PERSONNE WHERE id_p = :id_client");
+        $stmt->execute(['id_client' => $id_client]);
+        $niveau = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $niveau['niveau'];
+    }
     
 
 
@@ -210,6 +232,7 @@
             return false;
         }
     }
+    
 
     
 ?>
