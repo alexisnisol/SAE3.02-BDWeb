@@ -3,7 +3,7 @@
  * Classe représentant une case simple contenant des cours.
  * Hérite de la classe `cases`.
  */
-class caseSimple extends cases {
+class caseSimple extends ConteneurCours {
     public function getDuration() {
         return 1;
     }

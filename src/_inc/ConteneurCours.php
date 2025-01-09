@@ -2,7 +2,7 @@
 /**
  * Classe abstraite représentant une case contenant des cours.
  */
-abstract class cases {
+abstract class ConteneurCours {
     protected $cours = [];
 
     public function addCours($cours) {

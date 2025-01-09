@@ -2,14 +2,18 @@
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 require ROOT . '/_inc/db.php';
 require ROOT . '/_inc/cours.php';
-require ROOT . '/_inc/cases.php';
+require ROOT . '/_inc/ConteneurCours.php';
 require ROOT . '/_inc/caseDouble.php';
 require ROOT . '/_inc/caseSimple.php';
+require ROOT . '/_inc/navigation.php';
+
+
 
 create_tables();
 
 $schedule = get_weekly_schedule();
 $user = get_user("alice@example.com");
+
 
 $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
@@ -81,7 +85,6 @@ $dateFinSemaine = (clone $dateCourante)->modify('+6 days');
 
         foreach ($schedule as $coursData) {
             $dateCours = new DateTime($coursData['dateR']);
-
             // Vérification que la date du cours appartient à la semaine affichée
             if ($dateCours >= $dateDebutSemaine && $dateCours <= $dateFinSemaine) {
                 $cours = new Cours(
@@ -90,10 +93,15 @@ $dateFinSemaine = (clone $dateCourante)->modify('+6 days');
                     $coursData['duree'],
                     $coursData['nom_cours'],
                     $coursData['niveau'],
-                    $coursData['places_restantes'],
+                    $coursData['nb_personnes_max'],
                     $coursData['nom_moniteur'],
-                    $coursData['dateR']
+                    $coursData['dateR'],
+                    $coursData['id_cp']
                 );
+
+                
+
+
 
                 $jour = $cours->getJour();
                 $heure = $cours->getHeure();
@@ -134,8 +142,7 @@ $dateFinSemaine = (clone $dateCourante)->modify('+6 days');
                 $startRow = $heure - 7;
                 $rowSpan = $case->getDuration();
 
-                
-                echo "<div class='course-case' style='grid-column: $jourIndex; grid-row: $startRow / span $rowSpan;'>";
+                echo "<div class='course-case' style='grid-column: $jourIndex; grid-row: $startRow / span $rowSpan'>";
                 echo $case->__repr__();
                 echo "</div>";
             }
@@ -144,9 +151,146 @@ $dateFinSemaine = (clone $dateCourante)->modify('+6 days');
 
 </div>
 
-<?php include ROOT . '/_inc/navigation.php' ?>
+
+<?php if (isset($week, $year)) {
+    $navigator = new WeekNavigator($week, $year);
+    echo $navigator->renderNavigation();
+    } else {
+        echo '<p>Les paramètres semaine et année ne sont pas définis.</p>';
+    }
+?>
 </main>
 </section>
 <?php include ROOT . '/_inc/footer.php' ?>
+
+
+<!-- Le pop-up pour la réservation -->
+<div class="popup" id="booking-popup">
+    <div class="popup-content">
+        <h2 id="popup-title">Réservation pour le cours</h2>
+        <p id="popup-course-info"></p>
+        <p><strong>Date et Heure :</strong> <span id="popup-date-time"></span></p>
+        <label for="poney"> <strong>Choisissez un poney : </strong></label>
+        <select name="poney_dispo" id="poney_dispo">
+
+        </select>
+        
+
+        <div class="button-container">
+            <button class="cancel-btn" onclick="closeBookingPopup()">Annuler</button>
+
+            <form id="booking-form">
+                <input type="hidden" name="id_user" value="<?= $user['id_p'] ?>">
+                <input type="hidden" name="id_cours" id="id_cours">
+                <input type="hidden" name="id_poney" id="id_poney">
+                <input type="hidden" name="date" id="dateC">
+                <button type="submit" class="book-btn">Réserver</button>
+
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openBookingPopup(courseInfo) {
+    const popupTitle = document.getElementById('popup-title');
+    const courseInfoElem = document.getElementById('popup-course-info');
+    const dateTimeElem = document.getElementById('popup-date-time');
+
+    // Affichage des informations du cours
+    popupTitle.textContent = "Réservation pour le cours : " + courseInfo.nom_cours;
+    courseInfoElem.innerHTML = `
+        <p><strong>Cours :</strong> ${courseInfo.nom_cours}</p>
+        <p><strong>Moniteur :</strong> ${courseInfo.moniteur}</p>
+        <p><strong>Capacité Maximale:</strong> ${courseInfo.nb_personnes_max}</p>
+    `;
+    dateTimeElem.textContent = `${courseInfo.date} de ${courseInfo.heure} à ${courseInfo.heureFin}`;
+
+    document.getElementById('id_cours').value = courseInfo.id_cours;
+    document.getElementById('dateC').value = `${courseInfo.date} ${courseInfo.heure}`;
+
+    // Appel à la fonction PHP pour obtenir les poneys disponibles
+    fetch('/_inc/db.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: 'get_poney_dispo',
+            date: courseInfo.date,
+            heure: courseInfo.heure
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const poneys = data.poneys;
+            const poneySelect = document.getElementById('poney_dispo');
+            poneySelect.innerHTML = ''; // Réinitialise la liste
+
+            // Ajoute chaque poney à la liste déroulante
+            poneys.forEach(poney => {
+                const option = document.createElement('option');
+                option.value = poney.id;
+                option.textContent = `${poney.nom} - ${poney.poids_max} kg - ${poney.age} ans`;
+                poneySelect.appendChild(option);
+            });
+        } else {
+            alert('Erreur lors du chargement des poneys disponibles.');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de la récupération des poneys disponibles.');
+    });
+
+    // Affichage du pop-up
+    document.getElementById('booking-popup').style.display = 'flex';
+}
+
+
+
+    function closeBookingPopup() {
+        document.getElementById('booking-popup').style.display = 'none';
+    }
+    document.getElementById('booking-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Empêche l'envoi classique du formulaire
+
+    const id_user = 1; // ID utilisateur récupéré côté PHP
+    const id_cours = document.getElementById('id_cours').value;
+    const id_poney = document.getElementById('poney_dispo').value;
+    const date = document.getElementById('dateC').value;
+
+
+    // Appel de la fonction pour insérer la réservation via une requête POST
+    fetch('/_inc/db.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_user, id_cours, id_poney, date })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Réponse du serveur:', data.message);
+            alert('Réservation effectuée avec succès!');
+        
+            
+            closeBookingPopup(); // Fermeture du pop-up
+        } else {
+            alert('Erreur lors de la réservation: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de la réservation.'+ error);
+    });
+});
+
+</script>
+
+
 </body>
 </html>
