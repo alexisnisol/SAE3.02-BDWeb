@@ -2,8 +2,6 @@
 
 namespace App\Views;
 
-use App\Views\Template;
-
 class Router
 {
 
@@ -16,12 +14,17 @@ class Router
     
     public static function render(string $view, string $title, array $cssFiles = [])
     {
+        self::renderWithTemplate($view, $title, 'main', $cssFiles);
+    }
+
+    public static function renderWithTemplate(string $view, string $title, string $layout, array $cssFiles = [])
+    {
 
         ob_start();
         require ROOT . '/templates/' . $view;
         $content = ob_get_clean();
 
-        self::$template->setLayout('main');
+        self::$template->setLayout($layout);
         self::$template->setTitle($title);
         self::$template->setCssFiles($cssFiles);
         self::$template->setContent($content);
@@ -41,13 +44,16 @@ class Router
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
             case 'login':
-                self::render('auth/login.php', 'Connexion', ['auth.css']);
+                self::render('auth/login.php', 'Connexion', ['form.css']);
                 break;
             case 'register':
-                self::render('auth/register.php', 'Inscription', ['auth.css']);
+                self::render('auth/register.php', 'Inscription', ['form.css']);
                 break;
             case 'logout':
                 self::render('auth/logout.php', 'Deconnexion', []);
+                break;
+            case 'creation_cours':
+                self::renderWithTemplate('admin/creation_cours_p.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
                 break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
