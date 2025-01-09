@@ -6,9 +6,11 @@ use App\Auth\Users\User;
 
 class AuthForm {
 
-    static function checkLoginForm($email, $password) {
+    static function checkLoginForm($email, $password): string
+    {
         $user = Auth::getUserByEmail($email);
 
+        $error = '';
         if($user){
             //verify password
             if(password_verify($password, $user->password)){
@@ -27,9 +29,11 @@ class AuthForm {
         return $error;
     }
 
-    static function checkRegisterForm($email, $password, $firstName, $lastName, $address, $phone, $level, $weight) {
+    static function checkRegisterForm($email, $password, $firstName, $lastName, $address, $phone, $level, $weight): string
+    {
         $user = Auth::getUserByEmail($email);
 
+        $error = '';
         if(!$user){
             $userObj = new User(NULL, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password);
             $userObj->register();

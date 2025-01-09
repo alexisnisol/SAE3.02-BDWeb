@@ -10,7 +10,8 @@ class Instructor extends User {
         $this->experience = $experience;
     }
 
-    public function isInstructor() {
+    public function isInstructor(): bool
+    {
         return true;
     }
 }

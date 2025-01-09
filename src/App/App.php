@@ -9,7 +9,8 @@ class App {
     private $db;
     private static $app;
 
-    public static function getApp() {
+    public static function getApp(): App
+    {
         if (is_null(self::$app)) {
             self::$app = new App();
         }
@@ -17,7 +18,8 @@ class App {
         return self::$app;
     } 
 
-    public static function loadApp() {
+    public static function loadApp(): void
+    {
         session_start();
 
         require ROOT . '/App/Autoloader.php';

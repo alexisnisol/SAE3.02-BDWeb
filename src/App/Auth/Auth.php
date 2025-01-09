@@ -9,11 +9,13 @@ use App\Auth\Users\User;
 class Auth
 {
 
-    static function isUserLoggedIn() {
+    static function isUserLoggedIn(): bool
+    {
         return isset($_SESSION['user_id']);
     }
 
-    static function getCurrentUser() {
+    static function getCurrentUser(): ?array
+    {
         if (self::isUserLoggedIn()) {
             return [
                 'id' => $_SESSION['user_id'],

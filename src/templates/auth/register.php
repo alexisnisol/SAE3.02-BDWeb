@@ -37,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             </div>
             
             <div class="input-container">
-                <input type="tel" placeholder="Numéro de téléphone" name="phone" pattern="[0-9]{10}" required>
+                <input type="tel" placeholder="Numéro de téléphone" name="phone" maxlength="10" pattern="[0-9]{10}" required>
             </div>
             
             <div class="input-row">
