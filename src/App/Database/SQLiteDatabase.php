@@ -50,7 +50,7 @@ class SQLiteDatabase implements Database
     }
 
     public function databaseExists() {
-        $query = $this->query("SHOW TABLES LIKE 'PONEY'");
+        $query = $this->query("SELECT name FROM sqlite_master WHERE type='table' AND name='PONEY'");
         $result = $query->fetch();
         return $result;
     }

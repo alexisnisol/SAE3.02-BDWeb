@@ -63,8 +63,7 @@ class MySQLDatabase implements Database
 
     public function databaseExists() {
         $query = $this->query("SHOW TABLES LIKE 'PONEY'");
-        $result = $query->fetch();
-        return $result;
+        return $query->fetch();
     }
 
     public function createDatabase() {

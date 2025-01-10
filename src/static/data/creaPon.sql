@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS COURS_PROGRAMME;
 CREATE TABLE COURS_PROGRAMME (
   id_cp INT PRIMARY KEY AUTO_INCREMENT,
   nom_cours VARCHAR(42),
-  niveau INT CHECK(niveau > 0 AND niveau < 6),
+  niveau INT CHECK(niveau > 0 AND niveau < 4),
   duree INT CHECK(duree > 0 AND duree < 3),
   heure TIME CHECK(HOUR(heure) > 0 AND HOUR(heure) < 25),
   jour VARCHAR(16) CHECK (jour IN ('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')),
@@ -22,23 +22,24 @@ CREATE TABLE COURS_PROGRAMME (
 
 -- Création de la table PERSONNE
 CREATE TABLE PERSONNE (
-  id_p INT PRIMARY KEY,
+  id_p INT PRIMARY KEY AUTO_INCREMENT,
   nom VARCHAR(42),
   prenom VARCHAR(42),
   adresse VARCHAR(100),
   telephone VARCHAR(15),
   email VARCHAR(100),
+  mdp VARCHAR(64),
   experience TEXT NULL,
   salaire DECIMAL(10, 2) NULL,
   poids FLOAT NULL CHECK(poids > 9 AND poids < 51),
   cotisation DECIMAL(10, 2) NULL,
-  date_inscription date NOT NULL,
-  niveau INT NULL CHECK(niveau > 0 AND niveau < 6)
+  date_inscription DATE DEFAULT (CURRENT_DATE),
+  niveau INT NULL CHECK(niveau > 0 AND niveau < 4)
 );
 
 -- Création de la table PONEY
 CREATE TABLE PONEY (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   nom VARCHAR(42),
   age INT CHECK(age > 0 AND age < 26),
   poids_max FLOAT CHECK(poids_max > 9 AND poids_max < 51)
