@@ -2,6 +2,8 @@
 
 namespace App\Views;
 
+use App\Controllers\Auth\Auth;
+
 class Router
 {
 
@@ -52,7 +54,12 @@ class Router
             case 'logout':
                 self::render('auth/logout.php', 'Deconnexion', []);
                 break;
+            case 'dashboard':
+                Auth::checkUserLoggedIn();
+                self::renderWithTemplate('admin/dashboard.php', 'Tableau de bord', 'main', ['form.css']);
+                break;
             case 'creation_cours':
+                Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/creation_cours_p.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
                 break;
             default:

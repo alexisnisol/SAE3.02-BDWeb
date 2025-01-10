@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\Auth\Auth;
+use App\Views\Flash;
 
 ?>
 
@@ -50,7 +51,7 @@ use App\Controllers\Auth\Auth;
             echo '<p>Bonjour ' . Auth::getCurrentUser()['name'] . '</p>';
 
             if (Auth::getCurrentUserObj()->isInstructor()) {
-                echo '<a href="index.php?action=creation_cours">Dashboard</a>';
+                echo '<a href="index.php?action=dashboard">Dashboard</a>';
             }
 
             echo '<a href="index.php?action=logout">Déconnexion</a>';
@@ -63,6 +64,7 @@ use App\Controllers\Auth\Auth;
 
 
 <main>
+    <?php Flash::flash();?>
     <?php echo $content ?? null ?>
 </main>
 
