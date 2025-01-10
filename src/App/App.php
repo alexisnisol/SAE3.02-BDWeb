@@ -13,30 +13,24 @@ class App {
     {
         if (is_null(self::$app)) {
             self::$app = new App();
+
+            session_start();
+
+            require ROOT . '/App/Autoloader.php';
+
+            Autoloader::register();
+
+            self::getApp()->getDB();
         }
 
         return self::$app;
-    } 
-
-    public static function loadApp(): void
-    {
-        session_start();
-
-        require ROOT . '/App/Autoloader.php';
-
-        Autoloader::register();
-
-        self::getApp()->loadDB();
     }
 
-    private function loadDB() {
+    public function getDB() {
         if ($this->db === null) {
             $this->db = new MySQLDatabase(ConfigBD::$DB_NAME, ConfigBD::$DB_USER, ConfigBD::$DB_PASSWORD, ConfigBD::$DB_HOST);
             $this->db->loadContents();
         }
-    }
-
-    public function getDB() {
         return $this->db;
     }
 }
