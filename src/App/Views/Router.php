@@ -32,7 +32,7 @@ class Router
         echo self::$template->compile();
     }
 
-    public function handle() {
+    public function execute() {
         if (isset($_GET['action']) && $_GET['action'] !== '') {
             $action = $_GET['action'];
         } else {
