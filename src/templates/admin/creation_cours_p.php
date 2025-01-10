@@ -24,6 +24,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 <div class="page">
     <div class="form-container">
+        <a href="index.php?action=dashboard"><i class='fas fa-angle-left' style='font-size:24px'></i></a>
         <h1>Informations du cours</h1>
         <form action="#" method="POST">
             <label for="nom_cours">Nom du cours</label>
