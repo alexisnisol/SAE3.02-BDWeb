@@ -62,6 +62,14 @@ class Router
                 Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/creation_cours_p.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
                 break;
+            case 'creation_cours_realise':
+                Auth::checkUserIsInstructor();
+                self::renderWithTemplate('admin/creation_cours_r.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
+                break;
+            case 'creation_poney':
+                Auth::checkUserIsInstructor();
+                self::renderWithTemplate('admin/creation_pon.php', "Création d'un poney", 'main', ['form.css', 'full-form.css']);
+                break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;
