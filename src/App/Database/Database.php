@@ -30,4 +30,10 @@ abstract class Database implements IDatabase
         $this->execute(file_get_contents(ROOT . '/static/data/creaPon.sql'));
         $this->execute(file_get_contents(ROOT . '/static/data/insPon.sql'));
     }
+
+    public function getAllProgrammedCourses() {
+        $query = $this->prepare('SELECT * FROM COURS_PROGRAMME');
+        $query->execute();
+        return $query->fetchAll();
+    }
 }
