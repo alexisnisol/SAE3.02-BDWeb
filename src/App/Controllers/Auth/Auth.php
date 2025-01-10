@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Auth;
+namespace App\Controllers\Auth;
 
 use App;
-use App\Auth\Users\Instructor;
-use App\Auth\Users\User;
+use App\Controllers\Auth\Users\Instructor;
+use App\Controllers\Auth\Users\User;
 
 class Auth
 {

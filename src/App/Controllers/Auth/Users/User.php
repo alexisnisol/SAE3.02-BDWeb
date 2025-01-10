@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Users;
+namespace App\Controllers\Auth\Users;
 
 use App;
 

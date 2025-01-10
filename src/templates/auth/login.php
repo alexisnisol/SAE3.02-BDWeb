@@ -1,6 +1,6 @@
 <?php
 
-use App\Auth\AuthForm;
+use App\Controllers\Auth\AuthForm;
 
 //if is post request
 if($_SERVER['REQUEST_METHOD'] === 'POST'){

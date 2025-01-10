@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Auth;
+namespace App\Controllers\Auth;
 
-use App\Auth\Users\User;
+use App\Controllers\Auth\Users\User;
 
 class AuthForm {
 
