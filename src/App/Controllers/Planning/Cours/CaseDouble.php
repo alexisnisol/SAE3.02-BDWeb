@@ -1,15 +1,19 @@
 <?php
+
+namespace App\Controllers\Planning\Cours;
+
+
 /**
- * Classe représentant une case simple contenant des cours.
+ * Classe représentant une case double contenant des cours.
  * Hérite de la classe `cases`.
  */
-class caseSimple extends ConteneurCours {
+class CaseDouble extends ConteneurCours {
     public function getDuration() {
-        return 1;
+        return 2; 
     }
 
     public function __repr__() {
-        $html = "<div class='case-simple'>";
+        $html = "<div class='case-double' style='grid-row: span 2;'>";
         foreach ($this->cours as $cours) {
             $html .= $cours->__repr__();
         }

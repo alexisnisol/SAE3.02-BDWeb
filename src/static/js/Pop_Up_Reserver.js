@@ -33,7 +33,7 @@ function fetchPoneyDispo(date, heure) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            action: 'get_poney_dispo',
+            action: 'getPoneyDispo',
             date,
             heure
         })

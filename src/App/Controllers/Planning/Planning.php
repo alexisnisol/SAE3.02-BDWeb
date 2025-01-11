@@ -1,9 +1,12 @@
 <?php
-require ROOT . '/_inc/db.php';
-require ROOT . '/_inc/cours.php';
-require ROOT . '/_inc/ConteneurCours.php';
-require ROOT . '/_inc/caseDouble.php';
-require ROOT . '/_inc/caseSimple.php';
+
+namespace App\Controllers\Planning;
+
+use DateTime;
+use App\Controllers\Planning\Cours\CaseSimple;
+use App\Controllers\Planning\Cours\CaseDouble;
+use App\Controllers\Planning\Cours\Cours;
+use App\Controllers\Planning\PlanningDB;
 
 class Planning
 {
@@ -18,7 +21,6 @@ class Planning
         $this->week = $week;
         $this->year = $year;
         $this->initializeDates();
-        create_tables();
     }
 
     private function initializeDates(): void
@@ -31,8 +33,7 @@ class Planning
 
     public function generatePlanning(): void
     {
-        $schedule = get_weekly_schedule();
-
+        $schedule = PlanningDB::getWeeklySchedule();
 
         foreach ($schedule as $coursData) {
             $dateCours = new DateTime($coursData['dateR']);
@@ -68,7 +69,6 @@ class Planning
             return;
         }
 
-
         if ($this->planning[$jour][$heure] ?? false) {
             return;
         }
@@ -76,7 +76,6 @@ class Planning
         if ($duree === 2 && $this->planning[$jour][$heure + 1] ?? false) {
             return;
         }
-
 
         $case = ($duree === 1) ? new CaseSimple() : new CaseDouble();
         $case->addCours($cours);

@@ -1,5 +1,10 @@
 <?php
+
+namespace App\Controllers\Planning;
+
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR');
+
+use DateTime;
 
 /**
  * Classe pour gérer la navigation entre les semaines.
@@ -15,6 +20,10 @@ class WeekNavigator
         $this->year = $year;
     }
 
+    /**
+     * Récupère les informations de la semaine précédente.
+     * Utilisé pour le bouton de navigation vers la semaine précédente.
+     */
     public function getPreviousWeek(): array
     {
         $prevWeek = $this->week - 1;
@@ -28,6 +37,10 @@ class WeekNavigator
         return ['week' => $prevWeek, 'year' => $prevYear];
     }
 
+    /**
+     * Récupère les informations de la semaine suivante.
+     * Utilisé pour le bouton de navigation vers la semaine suivante.
+     */
     public function getNextWeek(): array
     {
         $nextWeek = $this->week + 1;
@@ -41,6 +54,9 @@ class WeekNavigator
         return ['week' => $nextWeek, 'year' => $nextYear];
     }
 
+    /**
+     * Récupère la date du lundi de la semaine actuelle.
+     */
     public function getCurrentMondayDate(): string
     {
         $dateCourante = new DateTime();
@@ -49,6 +65,9 @@ class WeekNavigator
         return strftime('%d %B %Y', $dateCourante->getTimestamp());
     }
 
+    /**
+     * Affiche la navigation entre les semaines.
+     */
     public function renderNavigation(): string
     {
         $prev = $this->getPreviousWeek();

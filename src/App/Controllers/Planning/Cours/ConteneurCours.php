@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Controllers\Planning\Cours;
+
 /**
  * Classe abstraite représentant une case contenant des cours.
  */

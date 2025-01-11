@@ -1,8 +1,14 @@
 <?php
+
+namespace App\Controllers\Planning\Cours;
+
+use DateTime;
+
 /**
  * Classe représentant un cours avec ses caractéristiques et son affichage.
  */
 class Cours {
+    public $id_cours;
     public $jour;
     public $date;
     public $heure;
@@ -23,8 +29,6 @@ class Cours {
         $this->nb_personnes_max = $nb_personnes_max;
         $this->date = $date;
         $this->id_cours = $id_cours;
-
-
     }
 
     public function getHeure() {

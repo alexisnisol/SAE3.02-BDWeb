@@ -1,8 +1,7 @@
 <?php
-define('ROOT', $_SERVER['DOCUMENT_ROOT']);
-require ROOT . '/_inc/planningGeneration.php';
-require ROOT . '/_inc/navigation.php';
 
+use App\Controllers\Planning\Planning;
+use App\Controllers\Planning\WeekNavigator;
 
 $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
@@ -15,24 +14,6 @@ $weekNavigator = new WeekNavigator($week, $year);
 
 
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/header.css">
-    <link rel="stylesheet" href="/static/css/footer.css">
-    <link rel="stylesheet" href="/static/css/planning.css">
-    <link rel="stylesheet" href="/static/css/navigation.css">
-
-    <title>Planning</title>
-</head>
-
-<body>
-
-<?php include ROOT . '/_inc/header.php' ?>
-
 <section class="gloabal">
 <aside class="client-info">
     <div class="profile-pic">
@@ -110,11 +91,7 @@ $weekNavigator = new WeekNavigator($week, $year);
         </div>
     </div>
 </div>
-
 </section>
 
-<?php include ROOT . '/_inc/footer.php'  ?>
 <script src= "/static/js/Pop_Up_Reserver.js">
 </script>
-</body>
-</html>

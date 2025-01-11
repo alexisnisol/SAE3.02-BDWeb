@@ -43,6 +43,9 @@ class Router
             case 'home':
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
+            case "planning":
+                self::render('planning.php', 'Planning', ['planning.css', 'navigation.css']);
+                break;
             case 'login':
                 self::render('auth/login.php', 'Connexion', ['form.css']);
                 break;
