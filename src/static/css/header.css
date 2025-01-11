@@ -1,3 +1,11 @@
+/* Réinitialisation des marges et paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 header {
     display: flex;
     justify-content: space-between;
@@ -76,6 +84,7 @@ header .logo::after {
     display: flex;
     align-items: center;
     margin-left: auto;
+    gap: 1rem;
 }
 
 .actions a {
