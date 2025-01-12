@@ -110,10 +110,6 @@ section {
     display: flex;
 }
 
-main {
-    margin-left: 10%;
-    padding: 1.25rem;
-}
 /* Styles pour le pop-up */
 /* Styles globaux */
 body {
@@ -229,16 +225,6 @@ body {
     font-size: 1.1rem;  /* Taille de la police légèrement augmentée */
     line-height: 1.7;
     color: #ffffff;
-}
-
-/* Mise en page principale */
-section {
-    display: flex;
-}
-
-main {
-    margin-left: 10%;
-    padding: 1.5rem;  /* Espacement intérieur ajusté */
 }
 
 /* Styles pour le pop-up */

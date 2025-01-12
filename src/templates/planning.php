@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\Auth\Auth;
 use App\Controllers\Planning\Planning;
 use App\Controllers\Planning\WeekNavigator;
 
@@ -7,13 +8,18 @@ $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 
 $planning = new Planning($week, $year);
-$planning->generatePlanning();
+try {
+    $planning->generatePlanning();
+} catch (DateMalformedStringException $e) {
+    echo $e->getMessage();
+    die();
+}
 
 $weekNavigator = new WeekNavigator($week, $year);
 
-
-
+$user = Auth::getCurrentUserObj();
 ?>
+
 <section class="gloabal">
 <aside class="client-info">
     <div class="profile-pic">
@@ -21,12 +27,12 @@ $weekNavigator = new WeekNavigator($week, $year);
     </div>
     <div class="info">
         <h3>Infos personnelles</h3>
-        <p><strong>Nom : </strong> <?= $user['nom'] ?></p>
-        <p><strong>Prénom : </strong> <?= $user['prenom'] ?></p>
-        <p><strong>Email : </strong> <?= $user['email'] ?></p>
-        <p><strong>Téléphone : </strong> <?= $user['telephone'] ?></p>
-        <p><strong>Niveau : </strong><?= $user['niveau']?></p>
-        <p><strong>Date Inscription : </strong><?= $user['date_inscription']?></p>
+        <p><strong>Nom : </strong> <?= $user->firstName ?></p>
+        <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
+        <p><strong>Email : </strong> <?= $user->email ?></p>
+        <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
+        <p><strong>Niveau : </strong><?= $user->level ?></p>
+        <p><strong>Date Inscription : </strong><?= $user->experience ?></p>
     </div>
 </aside>
 <main>
@@ -74,19 +80,19 @@ $weekNavigator = new WeekNavigator($week, $year);
         <select name="poney_dispo" id="poney_dispo">
 
         </select>
-        
+
 
         <div class="button-container">
             <button class="cancel-btn" onclick="closeBookingPopup()">Annuler</button>
 
             <form id="booking-form">
-                <input type="hidden" name="id_user" value="<?= $user['id_p'] ?>">
+                <input type="hidden" name="id_user" id="id_user" value="<?= $user->id ?>">
                 <input type="hidden" name="id_cours" id="id_cours">
                 <input type="hidden" name="id_poney" id="id_poney">
                 <input type="hidden" name="date" id="dateC">
                 <button type="submit" class="book-btn">Réserver</button>
 
-                
+
             </form>
         </div>
     </div>
