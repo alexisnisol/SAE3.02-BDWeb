@@ -4,7 +4,7 @@ namespace App\Controllers\Planning\Cours;
 
 /**
  * Classe représentant une case simple contenant des cours.
- * Hérite de la classe `cases`.
+ * Hérite de la classe `ConteneurCours'.
  */
 class CaseSimple extends ConteneurCours {
     public function getDuration() {

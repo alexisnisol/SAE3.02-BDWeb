@@ -58,6 +58,7 @@ class Cours {
      * @return string Code HTML représentant le cours.
      */
     public function __repr__() {
+        $unformattedDate = new DateTime($this->date);
         $formattedDate = date('d/m/Y', strtotime($this->date));
         $startTime = new DateTime($this->heure);
         $formattedTime = $startTime->format('H:i:s');
@@ -72,7 +73,7 @@ class Cours {
                 'nom_cours' => $this->nom_cours,
                 'moniteur' => $this->nom_moniteur,
                 'nb_personnes_max' => $this->nb_personnes_max,
-                'date' => $formattedDate,
+                'date' => $unformattedDate->format('Y-m-d'),
                 'heure' => $formattedTime,
                 'heureFin' => $formattedTimeFin,
                 'id_cours' => $this->id_cours
