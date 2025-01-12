@@ -77,9 +77,9 @@ class WeekNavigator
         ob_start();
         ?>
         <div class="week-navigation">
-            <a class="arrow-btn" href="?week=<?= $prev['week'] ?>&year=<?= $prev['year'] ?>">◀ Semaine précédente</a>
+            <a class="arrow-btn" href="index.php?action=planning&week=<?= $prev['week'] ?>&year=<?= $prev['year'] ?>">◀ Semaine précédente</a>
             <span id="current-week">Semaine <?= $this->week ?>, <?= $currentDate ?></span>
-            <a class="arrow-btn" href="?week=<?= $next['week'] ?>&year=<?= $next['year'] ?>">Semaine suivante ▶</a>
+            <a class="arrow-btn" href="index.php?action=planning&week=<?= $next['week'] ?>&year=<?= $next['year'] ?>">Semaine suivante ▶</a>
         </div>
         <?php
         return ob_get_clean();
