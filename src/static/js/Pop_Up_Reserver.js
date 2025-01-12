@@ -27,7 +27,7 @@ function updatePopupContent(courseInfo) {
 }
 
 function fetchPoneyDispo(date, heure) {
-    fetch('/_inc/db.php', {
+    fetch('/App/Controllers/Planning/PlanningDB.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -83,8 +83,8 @@ document.getElementById('booking-form').addEventListener('submit', function(even
     submitBooking({ id_user, id_cours, id_poney, date });
 });
 
-function submitBooking(bookingData) {
-    fetch('/_inc/db.php', {
+function submitBooking(bookingData){
+    fetch('/App/Controllers/Planning/PlanningDB.php',{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
