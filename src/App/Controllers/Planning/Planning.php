@@ -23,6 +23,9 @@ class Planning
         $this->initializeDates();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     private function initializeDates(): void
     {
         $dateCourante = new DateTime();
@@ -31,6 +34,9 @@ class Planning
         $this->dateFinSemaine = (clone $dateCourante)->modify('+6 days');
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function generatePlanning(): void
     {
         $schedule = PlanningDB::getWeeklySchedule();
@@ -60,6 +66,7 @@ class Planning
     {
         $jour = $cours->getJour();
         $heure = $cours->getHeure();
+        $heure = (int)substr($heure, 0, 2);
         $duree = $cours->getDuree();
 
         if (!in_array($jour, ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'])) {
@@ -69,20 +76,20 @@ class Planning
             return;
         }
 
+        if (!isset($this->planning[$jour])) {
+            $this->planning[$jour] = [];
+        }
+
         if ($this->planning[$jour][$heure] ?? false) {
             return;
         }
 
-        if ($duree === 2 && $this->planning[$jour][$heure + 1] ?? false) {
+        if ($duree === 2 && isset($this->planning[$jour][$heure+1]) && $this->planning[$jour][$heure + 1] ?? false) {
             return;
         }
 
         $case = ($duree === 1) ? new CaseSimple() : new CaseDouble();
         $case->addCours($cours);
-
-        if (!isset($this->planning[$jour])) {
-            $this->planning[$jour] = [];
-        }
 
         $this->planning[$jour][$heure] = $case;
     }
