@@ -75,7 +75,7 @@ function closeBookingPopup() {
 document.getElementById('booking-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const id_user = 1;
+    const id_user = document.getElementById('id_user').value;
     const id_cours = document.getElementById('id_cours').value;
     const id_poney = document.getElementById('poney_dispo').value;
     const date = document.getElementById('dateC').value;
