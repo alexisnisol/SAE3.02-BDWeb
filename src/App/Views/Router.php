@@ -2,6 +2,8 @@
 
 namespace App\Views;
 
+use App\Controllers\Auth\Auth;
+
 class Router
 {
 
@@ -44,6 +46,7 @@ class Router
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
             case "planning":
+                Auth::checkUserLoggedIn();
                 self::render('planning.php', 'Planning', ['planning.css', 'navigation.css']);
                 break;
             case 'login':
