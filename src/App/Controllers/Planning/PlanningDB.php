@@ -94,7 +94,7 @@ class PlanningDB
             cp.Ddd,
             cp.Ddf,
             cp.nb_personnes_max,
-            p.nom || ' ' || p.prenom AS nom_moniteur,
+            GROUP_CONCAT(p.nom, ' ', p.prenom) AS nom_moniteur,
             cr.dateR,
             cp.id_cp
         FROM COURS_REALISE cr
