@@ -13,6 +13,7 @@ class WeekNavigator
 {
     private int $week;
     private int $year;
+    private bool $isClient;
 
     public function __construct(int $week, int $year, bool $isClient = false)
     {

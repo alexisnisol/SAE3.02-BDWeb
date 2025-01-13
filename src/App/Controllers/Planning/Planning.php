@@ -15,6 +15,7 @@ class Planning
     private DateTime $dateDebutSemaine;
     private DateTime $dateFinSemaine;
     private array $planning = [];
+    private $id_client;
 
     public function __construct(int $week, int $year, $id_client)
     {
