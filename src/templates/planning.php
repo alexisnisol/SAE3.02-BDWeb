@@ -20,11 +20,7 @@ $weekNavigator = new WeekNavigator($week, $year);
 $user = Auth::getCurrentUserObj();
 ?>
 
-<<<<<<< HEAD
-<section class="gloabal">
-=======
 <section class="global">
->>>>>>> 2e390e20a809fff530426e61dbf35fd44a34ae39
 <aside class="client-info">
     <div class="profile-pic">
         <img src="/static/images/client.webp" alt="img de profil">
@@ -35,21 +31,17 @@ $user = Auth::getCurrentUserObj();
         <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
         <p><strong>Email : </strong> <?= $user->email ?></p>
         <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
-<<<<<<< HEAD
         <p><strong>Niveau : </strong><?= $user->level ?></p>
         <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
-        <p><strong>Est payé : </strong><?= $user->cotisation ?></p>
+        <p><strong>Est payé : </strong><?= $user->checkEstPaye()?></p>
+    <?php 
+    if (!$user->estPaye()) {
+        echo '<p><a class="btn_payer" href="index.php?action=paiement">Payer maintenant</a></p>';
+    }
+    ?>
     </div>
 </aside>
 <main>
-=======
-        <p><strong>Niveau : </strong><?= $user->getLevel()?></p>
-        <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
-    </div>
-</aside>
-<main>
-<div class="planning-container">
->>>>>>> 2e390e20a809fff530426e61dbf35fd44a34ae39
 <h1 class="planning_titre">Planning Hebdomadaire</h1>
 
 <div class="planning">

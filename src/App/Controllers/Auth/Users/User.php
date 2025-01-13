@@ -17,11 +17,11 @@ class User {
     public $weight;
     public $password;
     public $date_inscription;
-
+    public $cotisation;
     public $salaire;
     public $experience;
 
-    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, $date_inscription){
+    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, $date_inscription, $cotisation){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -32,6 +32,7 @@ class User {
         $this->weight = $weight;
         $this->password = $password;
         $this->date_inscription = $date_inscription;
+        $this->cotisation = $cotisation;
     }
 
     public function isInstructor() {
@@ -58,6 +59,17 @@ class User {
         $this->hashPassword();
         $query = App::getApp()->getDB()->prepare('INSERT INTO PERSONNE (nom, prenom, adresse, telephone, email, mdp, poids, niveau) VALUES (:nom, :prenom, :adresse, :telephone, :email, :mdp, :poids, :niveau)');
         $query->execute(array(':nom' => $this->lastName, ':prenom' => $this->firstName, ':adresse' => $this->address, ':telephone' => $this->phone, ':email' => $this->email, ':mdp' => $this->password, ':poids' => $this->weight, ':niveau' => $this->level));
+    }
+
+    public function estPaye() {
+        return $this->cotisation === true;
+    }
+
+    public function checkEstPaye(){
+        if ($this->cotisation === true){
+            return "Oui";
+        }
+        return "Non";
     }
 }
 

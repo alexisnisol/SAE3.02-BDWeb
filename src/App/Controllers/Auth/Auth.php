@@ -46,9 +46,9 @@ class Auth
 
         if($user){
             if (isset($user['salaire'])) {
-                $userObj = new Instructor($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['salaire'], $user['experience']);
+                $userObj = new Instructor($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['cotisation'], $user['salaire'], $user['experience']);
             } else {
-                $userObj = new User($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription']);
+                $userObj = new User($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['cotisation']);
             }
         } else {
             $userObj = null;
@@ -64,9 +64,9 @@ class Auth
 
         if($user){
             if (isset($user['salaire'])) {
-                $userObj = new Instructor($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['salaire'], $user['experience']);
+                $userObj = new Instructor($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['cotisation'], $user['salaire'], $user['experience']);
             } else {
-                $userObj = new User($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription']);
+                $userObj = new User($user['id_p'], $user['nom'], $user['prenom'], $user['adresse'], $user['email'], $user['telephone'], $user['niveau'], $user['poids'], $user['mdp'], $user['date_inscription'], $user['cotisation']);
             }
         } else {
             $userObj = null;
