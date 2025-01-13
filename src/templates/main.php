@@ -41,6 +41,12 @@ use App\Controllers\Auth\Auth;
                        class="<?php echo (isset($_GET['action']) && $_GET['action'] == 'register') ? 'active' : ''; ?>">Inscription</a></li>
                 <?php
             }
+            else{
+                ?>
+                <li><a href="index.php?action=coursReserver"
+                       class="<?php echo (isset($_GET['action']) && $_GET['action'] == 'coursReserver') ? 'active' : ''; ?>"> Mes Cours</a></li>
+                <?php       
+            }
             ?>
         </ul>
     </nav>
