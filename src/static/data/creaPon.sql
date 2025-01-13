@@ -31,7 +31,7 @@ CREATE TABLE PERSONNE (
   experience TEXT NULL,
   salaire DECIMAL(10, 2) NULL,
   poids FLOAT NULL CHECK(poids > 9 AND poids < 51),
-  cotisation DECIMAL(10, 2) NULL,
+  cotisation BOOLEAN NULL,
   date_inscription date NOT NULL,
   niveau INT NULL CHECK(niveau > 0 AND niveau < 6)
 );
