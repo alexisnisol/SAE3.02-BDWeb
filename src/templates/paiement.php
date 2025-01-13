@@ -1,12 +1,13 @@
 <?php
 
 use App\Controllers\Auth\Auth;
+use App\Views\Flash;
 
 //if is post request
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $user = Auth::getCurrentUserObj();
     $user->setCotisation();
-    header('Location: /index.php?action=planning');
+    Flash::popup('Votre paiement a bien été effectué', 'index.php?action=planning');
 }
 ?>
 
