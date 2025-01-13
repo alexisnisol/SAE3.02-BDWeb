@@ -1,8 +1,11 @@
 <?php
 
+use App\Controllers\Admin\CourseController;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    //...
+    $id_cours = explode('&', $_POST['cours'])[0];
+    $date = $_POST['date_c'];
+    CourseController::createRealizedCourse($id_cours, $date);
 }
 
 ?>
@@ -48,17 +51,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <label for="cours">Choisir un cours programmé</label>
                 <select id="cours" name="cours" required>
                     <?php
-                    $allCourses = App::getApp()->getDB()->getAllProgrammedCourses();
-                    foreach ($allCourses as $course) {
-                        echo '<option value="' . $course['id_cp'] . '">' . $course['nom_cours'] . ' - ' . $course['Ddd'] . ' au ' . $course['Ddf'] . ' - Le ' . $course['jour'] . ' - Niveau ' . $course['niveau'] . ' - Durée : '. $course['heure']+0 . 'h à ' .  $course['heure'] + $course['duree'] . 'h' . '</option>';
-                    }
+                        $allCourses = App::getApp()->getDB()->getAllProgrammedCourses();
+                        foreach ($allCourses as $course) {
+                            echo '<option value="' . $course['id_cp'] . '&' . $course['jour'] . '">' . $course['nom_cours'] . ' - ' . $course['Ddd'] . ' au ' . $course['Ddf'] . ' - Le ' . $course['jour'] . ' - Niveau ' . $course['niveau'] . ' - Durée : '. $course['heure']+0 . 'h à ' .  $course['heure'] + $course['duree'] . 'h' . '</option>';
+                        }
                     ?>
                 </select>
             </div>
-            <label for="ddd">Date du créneau</label>
-            <input type="date" id="date_c" name="date_c" required>
+
+            <label for="date_c">Date du créneau</label>
+            <input type="date" id="date_c" name="date_c" required oninput="validateDay(this)">
 
             <button type="submit">Ajouter le créneau de cours</button>
         </form>
     </div>
 </div>
+
+<script src= "/static/js/creation_cours_realise.js"></script>

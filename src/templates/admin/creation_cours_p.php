@@ -1,6 +1,5 @@
 <?php
 
-use App\App;
 use App\Controllers\Admin\CourseController;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -12,11 +11,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $ddd = $_POST['ddd'];
     $ddf = $_POST['ddf'];
     $nb_personnes_max = $_POST['nb_personnes_max'];
-
-    $error = CourseController::checkCourseCreationForm($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
+    $error = CourseController::checkProgrammedCourseCreationForm($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
 
     if (empty($error)) {
-        CourseController::createCourse($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
+        CourseController::createProgrammedCourse($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
     }
 }
 
