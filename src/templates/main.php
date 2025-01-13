@@ -91,7 +91,7 @@ use App\Views\Flash;
         </H3>
         <ul>
             <li>Mouad Zouadi</li>
-            <li> Alexy Wiciak</li>
+            <li>Alexy Wiciak</li>
             <li>Alexis Nisol</li>
         </ul>
 
