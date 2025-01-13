@@ -238,14 +238,12 @@ class PlanningDB
 
     static function check_user_inscrit($id_cours, $id_client)
     {
-        $stmt = App::getApp()->getDB()->prepare("SELECT * FROM RESERVER WHERE id_cours = :id_cours AND id_client = :id_client");
-        $stmt->execute(['id_cours' => $id_cours, 'id_client' => $id_client]);
-
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($res) {
-            return true;
-        } else {
+        try {
+            $stmt = App::getApp()->getDB()->prepare("SELECT 1 FROM RESERVER WHERE id_cours = :id_cours AND id_client = :id_client");
+            $stmt->execute(['id_cours' => $id_cours, 'id_client' => $id_client]);
+    
+            return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+        } catch (Exception $e) {
             return false;
         }
     }
