@@ -41,6 +41,8 @@ class Auth
     }
 
     static function checkUserIsInstructor() {
+        self::checkUserLoggedIn();
+        
         if(!self::getCurrentUser()['is_instructor']){
             header('Location: /index.php');
         }

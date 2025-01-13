@@ -55,7 +55,7 @@ class Router
                 self::render('auth/logout.php', 'Deconnexion', []);
                 break;
             case 'dashboard':
-                Auth::checkUserLoggedIn();
+                Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/dashboard.php', 'Tableau de bord', 'main', ['form.css']);
                 break;
             case 'creation_cours':
