@@ -3,7 +3,6 @@
 namespace App\Controllers\Planning;
 
 use App;
-use App\Autoloader;
 use PDO;
 
 
@@ -160,11 +159,6 @@ class PlanningDB
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-
-        
-
-
     static function getPoneyDispo($date)
     {
         $stmt = App::getApp()->getDB()->prepare("
@@ -255,8 +249,6 @@ class PlanningDB
             return false;
         }
     }
-
-
 }
 
 ?>

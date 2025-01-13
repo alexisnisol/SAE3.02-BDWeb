@@ -49,6 +49,9 @@ class Router
                 Auth::checkUserLoggedIn();
                 self::render('reservation/planning.php', 'Planning', ['planning.css', 'navigation.css']);
                 break;
+            case 'paiement':
+                self::render('paiement.php', 'Paiement', ['paiement.css']);
+                break;
             case 'login':
                 self::render('auth/login.php', 'Connexion', ['form.css']);
                 break;
