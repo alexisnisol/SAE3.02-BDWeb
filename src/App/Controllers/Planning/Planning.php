@@ -3,10 +3,10 @@
 namespace App\Controllers\Planning;
 
 use DateTime;
-use App\Controllers\Planning\Cours\CaseSimple;
-use App\Controllers\Planning\Cours\CaseDouble;
-use App\Controllers\Planning\Cours\Cours;
 use App\Controllers\Planning\PlanningDB;
+use App\Controllers\Planning\Cours\Cours;
+use App\Controllers\Planning\Cours\CaseDouble;
+use App\Controllers\Planning\Cours\CaseSimple;
 
 class Planning
 {
@@ -111,7 +111,7 @@ class Planning
         foreach ($this->planning as $jour => $cases) {
             foreach ($cases as $heure => $case) {
                 $jourIndex = array_search($jour, $jours) + 2;
-                $startRow = $heure - 7;
+                $startRow = $heure - 6;
                 $rowSpan = $case->getDuration();
 
                 $planningHtml .= "<div class='course-case' style='grid-column: $jourIndex; grid-row: $startRow / span $rowSpan'>";
