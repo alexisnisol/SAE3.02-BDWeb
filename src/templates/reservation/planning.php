@@ -44,7 +44,7 @@ $user = Auth::getCurrentUserObj();
     <main>
         <div class="planning-container">
             <h1 class="planning_titre">Planning Hebdomadaire</h1>
-
+            <h4 class="planning_soustitre">Cliquez sur un créneau pour réserver</h4>
             <div class="planning">
                 <!-- Ligne des jours et dates -->
                 <div class="header"></div>

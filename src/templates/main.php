@@ -44,7 +44,7 @@ use App\Views\Flash;
             } else {
                 ?>
                 <li><a href="index.php?action=planning"
-                       class="<?php echo (isset($_GET['action']) && $_GET['action'] == 'planning') ? 'active' : ''; ?>">Planning</a>
+                       class="<?php echo (isset($_GET['action']) && $_GET['action'] == 'planning') ? 'active' : ''; ?>">Réservation</a>
                 </li>
                 <li><a href="index.php?action=coursReserver"
                        class="<?php echo (isset($_GET['action']) && $_GET['action'] == 'coursReserver') ? 'active' : ''; ?>">
