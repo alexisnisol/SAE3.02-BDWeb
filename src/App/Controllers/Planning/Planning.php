@@ -3,10 +3,10 @@
 namespace App\Controllers\Planning;
 
 use DateTime;
-use App\Controllers\Planning\PlanningDB;
-use App\Controllers\Planning\Cours\Cours;
-use App\Controllers\Planning\Cours\CaseDouble;
 use App\Controllers\Planning\Cours\CaseSimple;
+use App\Controllers\Planning\Cours\CaseDouble;
+use App\Controllers\Planning\Cours\Cours;
+use App\Controllers\Planning\PlanningDB;
 
 class Planning
 {
