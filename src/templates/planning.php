@@ -32,7 +32,7 @@ $user = Auth::getCurrentUserObj();
         <p><strong>Email : </strong> <?= $user->email ?></p>
         <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
         <p><strong>Niveau : </strong><?= $user->level ?></p>
-        <p><strong>Date Inscription : </strong><?= $user->experience ?></p>
+        <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
     </div>
 </aside>
 <main>
