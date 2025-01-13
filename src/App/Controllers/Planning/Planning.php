@@ -111,7 +111,7 @@ class Planning
         foreach ($this->planning as $jour => $cases) {
             foreach ($cases as $heure => $case) {
                 $jourIndex = array_search($jour, $jours) + 2;
-                $startRow = $heure - 7;
+                $startRow = $heure - 6;
                 $rowSpan = $case->getDuration();
 
                 $planningHtml .= "<div class='course-case' style='grid-column: $jourIndex; grid-row: $startRow / span $rowSpan'>";

@@ -2,6 +2,7 @@
 
 use App\Controllers\Auth\Auth;
 use App\Controllers\Planning\PlanningDB;
+use App\Views\Flash;
 
 $typePaiment = $_GET['type'];
 $prix = $_GET['prix'];
@@ -25,10 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         checkBookingConditions($id_client, $id_cours, $user, $niveau);
 
         submitBooking($id_client, $id_cours, $id_poney, $date, $heure);
-        header('Location: ./index.php?action=planning');
+        Flash::popup('Votre paiement a bien été effectué', 'index.php?action=planning');
     } catch (Exception $e) {
         $error_message = $e->getMessage();
     }
+
+
+
+
 }
 
 

@@ -87,12 +87,26 @@ class Cours {
                 'id_user' => $_SESSION['user']['id'],
                 'niveau' => $this->niveau
 
+
             ]) . ")'>
                 <h4>" . htmlspecialchars($this->nom_cours) . "</h4>
                 <p><strong>Capacité Maximale:</strong> " . htmlspecialchars($this->nb_personnes_max) . "</p>
                 <p><strong>Prix :</strong> " . htmlspecialchars($this->prix) . "€</p>
                 <p><strong>Moniteur :</strong> " . htmlspecialchars($this->nom_moniteur) . "</p>
             </div>";
+    }
+
+    private static function getLevel($level) {
+        switch ($level) {
+            case 1:
+                return "Débutant";
+            case 2:
+                return "Intermédiaire";
+            case 3:
+                return "Avancé";
+            default:
+                return "Niveau inconnu";
+        }
     }
     
 }
