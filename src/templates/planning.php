@@ -20,7 +20,7 @@ $weekNavigator = new WeekNavigator($week, $year);
 $user = Auth::getCurrentUserObj();
 ?>
 
-<section class="gloabal">
+<section class="global">
 <aside class="client-info">
     <div class="profile-pic">
         <img src="/static/images/client.webp" alt="img de profil">
@@ -31,11 +31,12 @@ $user = Auth::getCurrentUserObj();
         <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
         <p><strong>Email : </strong> <?= $user->email ?></p>
         <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
-        <p><strong>Niveau : </strong><?= $user->level ?></p>
+        <p><strong>Niveau : </strong><?= $user->getLevel()?></p>
         <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
     </div>
 </aside>
 <main>
+<div class="planning-container">
 <h1 class="planning_titre">Planning Hebdomadaire</h1>
 
 <div class="planning">
@@ -101,3 +102,4 @@ $user = Auth::getCurrentUserObj();
 
 <script src= "/static/js/Pop_Up_Reserver.js">
 </script>
+</div>

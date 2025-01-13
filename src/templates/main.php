@@ -47,7 +47,7 @@ use App\Controllers\Auth\Auth;
     <div class="actions">
         <?php
         if (Auth::isUserLoggedIn()) {
-            echo '<p>Bonjour ' . Auth::getCurrentUser()['name'] . '</p>';
+            echo '<p>Bonjour, ' . Auth::getCurrentUser()['name'] . '</p>';
 
             if (Auth::getCurrentUserObj()->isInstructor()) {
                 echo '<a href="index.php?action=creation_cours">Dashboard</a>';

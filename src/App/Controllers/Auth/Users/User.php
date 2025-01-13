@@ -38,7 +38,18 @@ class User {
         return false;
     }
 
-    
+    public function getLevel() {
+        switch ($this->level) {
+            case 1:
+                return "Débutant";
+            case 2:
+                return "Intermédiaire";
+            case 3:
+                return "Avancé";
+            default:
+                return "Niveau inconnu";
+        }
+    }
     public function hashPassword(){
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
     }
