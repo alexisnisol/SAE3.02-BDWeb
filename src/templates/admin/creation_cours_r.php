@@ -10,9 +10,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <div class="page">
     <div class="form-container">
         <a href="index.php?action=dashboard"><i class='fas fa-angle-left' style='font-size:24px'></i></a>
-        <h1>Préselectionné un cours</h1>
+        <h1>Sélectionné un cours</h1>
         <form action="#" method="POST">
-
+<!-- 
             <div class="input-container">
                 <label for="niveau">Niveau</label>
                 <select id="niveau" name="niveau" required disabled>
@@ -42,7 +42,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <input type="date" id="ddd" name="ddd" required disabled>
 
             <label for="ddf">Date de fin</label>
-            <input type="date" id="ddf" name="ddf" required disabled>
+            <input type="date" id="ddf" name="ddf" required disabled> -->
 
             <div class="input-container">
                 <label for="cours">Choisir un cours programmé</label>
@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     <?php
                     $allCourses = App::getApp()->getDB()->getAllProgrammedCourses();
                     foreach ($allCourses as $course) {
-                        echo '<option value="' . $course['id_cp'] . '">' . $course['nom_cours'] . ' - ' . $course['Ddd'] . ' au ' . $course['Ddf'] . '</option>';
+                        echo '<option value="' . $course['id_cp'] . '">' . $course['nom_cours'] . ' - ' . $course['Ddd'] . ' au ' . $course['Ddf'] . ' - Le ' . $course['jour'] . ' - Niveau ' . $course['niveau'] . ' - Durée : '. $course['heure']+0 . 'h à ' .  $course['heure'] + $course['duree'] . 'h' . '</option>';
                     }
                     ?>
                 </select>
