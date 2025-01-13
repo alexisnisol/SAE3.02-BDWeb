@@ -21,6 +21,7 @@ function updatePopupContent(courseInfo) {
         <p><strong>Capacité Maximale:</strong> ${courseInfo.nb_personnes_max}</p>
         <p><strong>Niveau:</strong> ${courseInfo.niveau}</p>
     `;
+    
     dateTimeElem.textContent = `${courseInfo.date} de ${courseInfo.heure} à ${courseInfo.heureFin}`;
 
     document.getElementById('id_cours').value = courseInfo.id_cours;
