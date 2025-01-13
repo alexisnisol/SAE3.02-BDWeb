@@ -16,11 +16,12 @@ class User {
     public $level;
     public $weight;
     public $password;
+    public $date_inscription;
 
     public $salaire;
     public $experience;
 
-    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password){
+    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, $date_inscription){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -30,6 +31,7 @@ class User {
         $this->level = $level;
         $this->weight = $weight;
         $this->password = $password;
+        $this->date_inscription = $date_inscription;
     }
 
     public function isInstructor() {
