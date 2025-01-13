@@ -13,11 +13,13 @@ class WeekNavigator
 {
     private int $week;
     private int $year;
+    private bool $isClient;
 
-    public function __construct(int $week, int $year)
+    public function __construct(int $week, int $year, bool $isClient = false)
     {
         $this->week = $week;
         $this->year = $year;
+        $this->isClient = $isClient;
     }
 
     /**
@@ -75,11 +77,17 @@ class WeekNavigator
         $currentDate = $this->getCurrentMondayDate();
 
         ob_start();
+        if($this->isClient){
+            $action = 'coursReserver';
+        } else {
+            $action = 'planning';
+        }
+
         ?>
         <div class="week-navigation">
-            <a class="arrow-btn" href="index.php?action=planning&week=<?= $prev['week'] ?>&year=<?= $prev['year'] ?>">◀ Semaine précédente</a>
+            <a class="arrow-btn" href="index.php?action=<?= $action?>&week=<?= $prev['week'] ?>&year=<?= $prev['year'] ?>">◀ Semaine précédente</a>
             <span id="current-week">Semaine <?= $this->week ?>, <?= $currentDate ?></span>
-            <a class="arrow-btn" href="index.php?action=planning&week=<?= $next['week'] ?>&year=<?= $next['year'] ?>">Semaine suivante ▶</a>
+            <a class="arrow-btn" href="index.php?action=<?= $action?>&week=<?= $next['week'] ?>&year=<?= $next['year'] ?>">Semaine suivante ▶</a>
         </div>
         <?php
         return ob_get_clean();

@@ -7,7 +7,7 @@ use App\Controllers\Planning\WeekNavigator;
 $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 
-$planning = new Planning($week, $year);
+$planning = new Planning($week, $year,null);
 try {
     $planning->generatePlanning();
 } catch (DateMalformedStringException $e) {
@@ -31,7 +31,7 @@ $user = Auth::getCurrentUserObj();
             <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
             <p><strong>Email : </strong> <?= $user->email ?></p>
             <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
-            <p><strong>Niveau : </strong><?= $user->level ?></p>
+            <p><strong>Niveau : </strong><?= $user->getLevel()?></p>
             <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
             <p><strong>Est payé : </strong><?= $user->checkEstPaye() ?></p>
             <?php

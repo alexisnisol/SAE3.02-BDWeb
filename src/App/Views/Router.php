@@ -47,9 +47,10 @@ class Router
                 break;
             case "planning":
                 Auth::checkUserLoggedIn();
-                self::render('planning.php', 'Planning', ['planning.css', 'navigation.css']);
+                self::render('reservation/planning.php', 'Planning', ['planning.css', 'navigation.css']);
                 break;
             case 'paiement':
+                Auth::checkUserLoggedIn();
                 self::render('paiement.php', 'Paiement', ['paiement.css']);
                 break;
             case 'login':
@@ -63,6 +64,10 @@ class Router
                 break;
             case 'creation_cours':
                 self::renderWithTemplate('admin/creation_cours_p.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
+                break;
+            case 'coursReserver':
+                Auth::checkUserLoggedIn();
+                self::render('reservation/coursReserver.php', "Mes Cours", ['planning.css', 'navigation.css']);
                 break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
