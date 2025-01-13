@@ -20,7 +20,8 @@ class Auth
             return [
                 'id' => $_SESSION['user_id'],
                 'name' => $_SESSION['user_name'],
-                'email' => $_SESSION['user_email']
+                'email' => $_SESSION['user_email'],
+                'is_instructor' => $_SESSION['is_instructor']
             ];
         }
         return null;
@@ -35,6 +36,14 @@ class Auth
 
     static function checkUserLoggedIn() {
         if(!self::isUserLoggedIn()){
+            header('Location: /index.php');
+        }
+    }
+
+    static function checkUserIsInstructor() {
+        self::checkUserLoggedIn();
+        
+        if(!self::getCurrentUser()['is_instructor']){
             header('Location: /index.php');
         }
     }

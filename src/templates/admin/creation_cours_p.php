@@ -1,7 +1,30 @@
+<?php
+
+use App\Controllers\Admin\CourseController;
+
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $nom_cours = $_POST['nom_cours'];
+    $niveau = $_POST['niveau'];
+    $duree = $_POST['duree'];
+    $heure = $_POST['heure'];
+    $jour = $_POST['jour'];
+    $ddd = $_POST['ddd'];
+    $ddf = $_POST['ddf'];
+    $nb_personnes_max = $_POST['nb_personnes_max'];
+    $error = CourseController::checkProgrammedCourseCreationForm($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
+
+    if (empty($error)) {
+        CourseController::createProgrammedCourse($nom_cours, $niveau, $duree, $heure, $jour, $ddd, $ddf, $nb_personnes_max);
+    }
+}
+
+?>
+
 <div class="page">
     <div class="form-container">
+        <a href="index.php?action=dashboard"><i class='fas fa-angle-left' style='font-size:24px'></i></a>
         <h1>Informations du cours</h1>
-        <form action="/path-to-backend" method="POST">
+        <form action="#" method="POST">
             <label for="nom_cours">Nom du cours</label>
             <input type="text" id="nom_cours" name="nom_cours" maxlength="42" required>
 

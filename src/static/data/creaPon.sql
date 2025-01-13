@@ -103,10 +103,7 @@ create or replace trigger VerifierReposPoney
     on RESERVER
     FOR EACH ROW
 BEGIN
-    declare cours_consecutifs int;
     DECLARE total_heures INT DEFAULT 5;
-    declare heure_depuis_dernier_cours int;
-
 
     -- Calculer le total des heures travaillées par le poney dans les 2 heures précédentes à la nouvelle réservation
     SELECT IFNULL(SUM(C.duree), 0)

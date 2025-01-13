@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\Auth\Auth;
+use App\Views\Flash;
 
 ?>
 
@@ -9,6 +10,7 @@ use App\Controllers\Auth\Auth;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/ce811b00f8.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./static/css/header.css">
     <link rel="stylesheet" href="./static/css/footer.css">
     <?php
@@ -58,7 +60,7 @@ use App\Controllers\Auth\Auth;
             echo '<p>Bonjour, ' . Auth::getCurrentUser()['name'] . '</p>';
 
             if (Auth::getCurrentUserObj()->isInstructor()) {
-                echo '<a href="index.php?action=creation_cours">Dashboard</a>';
+                echo '<a href="index.php?action=dashboard">Dashboard</a>';
             }
 
             echo '<a href="index.php?action=logout">Déconnexion</a>';
@@ -71,6 +73,7 @@ use App\Controllers\Auth\Auth;
 
 
 <main>
+    <?php Flash::flash();?>
     <?php echo $content ?? null ?>
 </main>
 
