@@ -35,7 +35,7 @@ class AuthForm {
 
         $error = '';
         if(!$user){
-            $userObj = new User(NULL, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, null);
+            $userObj = new User(NULL, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, null, 0);
             $userObj->register();
 
             //redirect to login page
