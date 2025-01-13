@@ -62,15 +62,22 @@ class User {
     }
 
     public function estPaye() {
-        return $this->cotisation === true;
+        return $this->cotisation === 1;
     }
 
     public function checkEstPaye(){
-        if ($this->cotisation === true){
+        if ($this->cotisation === 1){
             return "Oui";
         }
         return "Non";
     }
+
+    public function setCotisation(){
+        $query = App::getApp()->getDB()->prepare('UPDATE PERSONNE SET cotisation=true WHERE id_p = :id_p');
+        $query->execute(array(':id_p' => $this->id));
+        return true;
+    }
+        
 }
 
 ?>

@@ -97,18 +97,10 @@ $user = Auth::getCurrentUserObj();
                 <input type="hidden" name="id_poney" id="id_poney">
                 <input type="hidden" name="date" id="dateC">
                 <button type="submit" class="book-btn">Réserver</button>
-
-
             </form>
         </div>
     </div>
 </div>
 </section>
-
 <script src= "/static/js/Pop_Up_Reserver.js">
-<<<<<<< HEAD
-</script>
-=======
-</script>
 </div>
->>>>>>> 2e390e20a809fff530426e61dbf35fd44a34ae39
