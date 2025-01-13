@@ -6,8 +6,12 @@ use App\Controllers\Planning\WeekNavigator;
 
 $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+$user = Auth::getCurrentUserObj();
 
-$planning = new Planning($week, $year);
+
+
+$planning = new Planning($week, $year, $user->id);
+
 try {
     $planning->generatePlanning();
 } catch (DateMalformedStringException $e) {
@@ -15,9 +19,8 @@ try {
     die();
 }
 
-$weekNavigator = new WeekNavigator($week, $year);
+$weekNavigator = new WeekNavigator($week, $year, true);
 
-$user = Auth::getCurrentUserObj();
 ?>
 
 <section class="global">
@@ -100,6 +103,5 @@ $user = Auth::getCurrentUserObj();
 </div>
 </section>
 
-<script src= "/static/js/Pop_Up_Reserver.js">
-</script>
+
 </div>

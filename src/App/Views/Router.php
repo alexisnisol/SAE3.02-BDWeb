@@ -45,10 +45,7 @@ class Router
             case 'home':
                 self::render('home.php', 'Accueil', ['index.css']);
                 break;
-            case "planning":
-                Auth::checkUserLoggedIn();
-                self::render('planning.php', 'Planning', ['planning.css', 'navigation.css']);
-                break;
+
             case 'login':
                 self::render('auth/login.php', 'Connexion', ['form.css']);
                 break;
@@ -58,6 +55,20 @@ class Router
             case 'logout':
                 self::render('auth/logout.php', 'Deconnexion', []);
                 break;
+
+            case "planning":
+                Auth::checkUserLoggedIn();
+                self::render('reservation/planning.php', 'Planning', ['planning.css', 'navigation.css']);
+                break;
+            case 'coursReserver':
+                Auth::checkUserLoggedIn();
+                self::render('reservation/coursReserver.php', "Mes Cours", ['planning.css', 'navigation.css']);
+                break;
+            case 'paiement':
+                Auth::checkUserLoggedIn();
+                self::render('paiement.php', 'Paiement', ['paiement.css']);
+                break;
+
             case 'dashboard':
                 Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/dashboard.php', 'Tableau de bord', 'main', ['form.css']);
@@ -74,6 +85,7 @@ class Router
                 Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/creation_pon.php', "Création d'un poney", 'main', ['form.css', 'full-form.css']);
                 break;
+
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;
