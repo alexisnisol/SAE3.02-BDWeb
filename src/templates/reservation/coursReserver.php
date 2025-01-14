@@ -40,7 +40,7 @@ $weekNavigator = new WeekNavigator($week, $year, true);
 </aside>
 <main>
 <div class="planning-container">
-<h1 class="planning_titre">Planning Hebdomadaire</h1>
+<h1 class="planning_titre">Mes Cours</h1>
 
 <div class="planning">
     <!-- Ligne des jours et dates -->

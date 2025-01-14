@@ -67,9 +67,9 @@ class User {
 
     public function checkEstPaye(){
         if ($this->cotisation === 1){
-            return "Oui";
+            return true;
         }
-        return "Non";
+        return false;
     }
 
     public function setCotisation(){

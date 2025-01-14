@@ -93,3 +93,40 @@ button:hover {
     margin-bottom: 1rem;
     text-align: left;
 }
+
+
+h4{
+    margin-bottom: 2%;
+}
+
+#error-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff; /* Couleur blanche */
+    color: #333333; /* Texte en gris foncé */
+    border: 1px solid #cccccc; /* Bordure grise */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 20px;
+    max-width: 300px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    z-index: 1000;
+}
+
+#error-popup button {
+    background-color: #f0f0f0; /* Bouton gris clair */
+    color: #333333; /* Texte du bouton */
+    border: 1px solid #cccccc; /* Bordure similaire à celle du popup */
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#error-popup button:hover {
+    background-color: #e6e6e6; /* Légère variation de gris clair au survol */
+}
