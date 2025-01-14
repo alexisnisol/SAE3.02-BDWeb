@@ -16,6 +16,8 @@ class Planning
     private DateTime $dateFinSemaine;
     private array $planning = [];
     private $id_client;
+    private $id_poney;
+    private $participants;
 
     public function __construct(int $week, int $year, $id_client)
     {
@@ -23,6 +25,8 @@ class Planning
         $this->year = $year;
         $this->id_client = $id_client;
         $this->initializeDates();
+        $this->participants = PlanningDB::getParticipants($id_cours);
+
     }
 
     /**
@@ -62,7 +66,8 @@ class Planning
                     $coursData['nb_personnes_max'],
                     $moniteur,
                     $coursData['dateR'],
-                    $coursData['id_cp']
+                    $coursData['id_cp'],
+                    $this->participants
                     
                 );
 

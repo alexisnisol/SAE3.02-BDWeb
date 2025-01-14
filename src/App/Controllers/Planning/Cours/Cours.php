@@ -17,10 +17,10 @@ class Cours {
     public $niveau;
     public $nb_personnes_max;
     public $nom_moniteur;
-    public $participants = [];
+    public $participants;
     public $prix;
 
-    public function __construct($jour, $heure, $duree, $nom_cours, $niveau, $nb_personnes_max, $nom_moniteur,$date, $id_cours) {
+    public function __construct($jour, $heure, $duree, $nom_cours, $niveau, $nb_personnes_max, $nom_moniteur,$date, $id_cours, $participants) {
         $this->jour = $jour;
         $this->heure = $heure;
         $this->duree = $duree;
@@ -35,6 +35,7 @@ class Cours {
         }else{
             $this->prix = 19.99;
         }
+        $this->participants = $participants;
     }
 
     public function getHeure() {
@@ -85,7 +86,9 @@ class Cours {
                 'id_cours' => $this->id_cours,
                 'prix' => $this->prix,
                 'id_user' => $_SESSION['user']['id'],
-                'niveau' => $this->niveau
+                'niveau' => $this->niveau,
+                'participants' => $this->participants
+
 
 
             ]) . ")'>

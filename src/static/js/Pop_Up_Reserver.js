@@ -21,8 +21,28 @@ function updatePopupContent(courseInfo) {
         <p><strong>Capacité Maximale:</strong> ${courseInfo.nb_personnes_max}</p>
         <p><strong> Prix :</strong> ${courseInfo.prix} €
         <p><strong>Niveau:</strong> ${courseInfo.niveau}</p>
-
+       <p><strong>Participants :</strong></p>
     `;
+
+    const select = document.createElement('select');
+    select.disabled = true; 
+
+    if (courseInfo.participants && courseInfo.participants.length > 0) {
+        courseInfo.participants.forEach(participant => {
+            const option = document.createElement('option');
+            option.value = participant.nom + ' ' + participant.prenom;
+            option.textContent = participant.nom + ' ' + participant.prenom;
+            select.appendChild(option);
+        });
+    } else {
+        const option = document.createElement('option');
+        option.textContent = "Aucun participant";
+        select.appendChild(option);
+    }
+
+    courseInfoElem.appendChild(select);
+
+
     dateTimeElem.textContent = `${courseInfo.date} de ${courseInfo.heure} à ${courseInfo.heureFin}`;
 
     document.getElementById('id_cours').value = courseInfo.id_cours;

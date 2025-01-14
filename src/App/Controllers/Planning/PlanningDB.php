@@ -247,6 +247,33 @@ class PlanningDB
             return false;
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    static function getAllPoneys()
+    {
+        $stmt = App::getApp()->getDB()->query("SELECT id, nom, poids_max, age FROM PONEY");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    static function getParticipants($id_cours)
+    {
+        $stmt = App::getApp()->getDB()->prepare("
+        SELECT 
+            p.nom, p.prenom
+        FROM 
+            PERSONNE p
+        LEFT JOIN 
+            RESERVER r ON p.id_p = r.id_client
+        WHERE 
+            r.id_cours = :id_cours
+    ");
+    
+        $stmt->execute(['id_cours' => $id_cours]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+>>>>>>> Stashed changes
 }
 
 ?>
