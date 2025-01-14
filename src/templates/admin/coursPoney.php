@@ -8,9 +8,9 @@ $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 $user = Auth::getCurrentUserObj();
 
+$id_poney = $_GET['id_poney'];
 
-
-$planning = new Planning($week, $year, $user->id,null);
+$planning = new Planning($week, $year,null,$id_poney);
 
 try {
     $planning->generatePlanning();
@@ -30,7 +30,7 @@ $weekNavigator = new WeekNavigator($week, $year, true);
     </div>
     <div class="info">
         <h3>Infos personnelles</h3>
-        <p><strong>Nom : </strong> <?= $user->firstName ?></p>
+        <p><strong>Nom : </strong> <?= $id_poney ?></p>
         <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
         <p><strong>Email : </strong> <?= $user->email ?></p>
         <p><strong>Téléphone : </strong> <?= $user->phone ?></p>

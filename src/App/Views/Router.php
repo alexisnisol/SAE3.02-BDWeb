@@ -85,6 +85,10 @@ class Router
                 Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/creation_pon.php', "Création d'un poney", 'main', ['form.css', 'full-form.css']);
                 break;
+            case 'planningPoney':
+                Auth::checkUserIsInstructor();
+                self::renderWithTemplate('admin/coursPoney.php', "Planning d'un poney", 'main', ['planning.css', 'navigation.css']);
+                break;
 
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
