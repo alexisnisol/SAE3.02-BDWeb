@@ -247,8 +247,6 @@ class PlanningDB
             return false;
         }
     }
-<<<<<<< Updated upstream
-=======
 
     static function getAllPoneys()
     {
@@ -273,7 +271,6 @@ class PlanningDB
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
->>>>>>> Stashed changes
 }
 
 ?>
