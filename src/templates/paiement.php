@@ -19,13 +19,12 @@ $error_message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $user = Auth::getCurrentUserObj();
-        if($typePaiment == 'cotisation'){
+        if(str_contains($typePaiment, 'Cotisation')){
             $user->setCotisation();
+        }else{
+            checkBookingConditions($id_client, $id_cours, $user, $niveau);
+            submitBooking($id_client, $id_cours, $id_poney, $date, $heure);
         }
-
-        checkBookingConditions($id_client, $id_cours, $user, $niveau);
-
-        submitBooking($id_client, $id_cours, $id_poney, $date, $heure);
         Flash::popup('Votre paiement a bien été effectué', 'index.php?action=planning');
     } catch (Exception $e) {
         $error_message = $e->getMessage();
@@ -49,7 +48,7 @@ function checkBookingConditions($id_client, $id_cours, $user,$niveau)
     }
 
 
-    if (PlanningDB::getPlacesRestantes($id_cours) <= 0) {
+    if (PlanningDB::getPlacesRestantes($id_cours) <= 0 && !str_contains($typePaiment, 'Cotisation')) {
         throw new Exception('Il n\'y a plus de places disponibles pour ce cours.');
     }
 
@@ -70,8 +69,12 @@ function submitBooking($id_client, $id_cours, $id_poney, $date, $heure)
 
 <div class="login">
     <div class="login-container">
+        
         <h2>Effectuer un paiement - <?= htmlspecialchars($typePaiment) ?></h2>
-        <h3>Le <?= htmlspecialchars($date) ?> à <?= htmlspecialchars($heure) ?></h3>
+        <?php
+        if (!str_contains($typePaiment, 'Cotisation')): ?>
+         <h4>Le <?= htmlspecialchars($date) ?> à <?= htmlspecialchars($heure) ?></h4>
+        <?php endif; ?>
         <h4><?= htmlspecialchars($prix) ?> €</h4>
         
         <form action="#" method="post">
