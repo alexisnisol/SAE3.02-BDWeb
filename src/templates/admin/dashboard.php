@@ -12,18 +12,19 @@ $poneys = PlanningDB::getAllPoneys();
         <button onclick="window.location='index.php?action=creation_poney';">Ajouter un poney</button>
         
         <!-- Bouton pour afficher la liste déroulante -->
-        <button id="show-ponney-form" style="margin-top: 1rem;">Voir le planning d'un poney</button>
+        <button id="show-poney-form" >Voir le planning d'un poney</button>
 
         <!-- Section cachée au départ -->
-        <div id="ponney-form" style="display: none; margin-top: 1rem;">
+        <div id="poney-form" style="display: none; margin-top: 1rem;">
             <form action="index.php?action=planningPoney" method="get">
-                <input type="hidden" name="action" value="planning_ponney">
+                <input type="hidden" name="action" value="planningPoney">
 
                 <label for="poney">Choisir un poney :</label>
                 <select name="poney" id="poney" required>
                     <option value="" disabled selected>-- Sélectionnez un poney --</option>
                     <?php foreach ($poneys as $poney): ?>
-                        <option value="<?= $poney['id_poney'] ?>"><?= $poney['nom'] ?> <?=$poney['age']?> <?=$poney['poids']?></option>
+                        <option value="<?= $poney['id_poney'] ?>"><?= $poney['nom'] ?>, <?=$poney['age']?> ans, <?=$poney['poids_max']?> kg Maximum</option>
+                    <?php endforeach; ?>
                 </select>
                 
                 <button type="submit" style="margin-top: 1rem;">Voir le planning</button>
@@ -31,11 +32,10 @@ $poneys = PlanningDB::getAllPoneys();
         </div>
     </div>
     <script>
-    // Ajout d'un gestionnaire d'événement pour afficher la liste déroulante
-    document.getElementById('show-ponney-form').addEventListener('click', function() {
-        const form = document.getElementById('ponney-form');
-        form.style.display = 'block'; // Afficher le formulaire
-        this.style.display = 'none'; // Cacher le bouton
+    document.getElementById('show-poney-form').addEventListener('click', function() {
+        const form = document.getElementById('poney-form');
+        form.style.display = 'block';
+        this.style.display = 'none';
     });
     </script>
 </div>

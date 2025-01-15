@@ -87,7 +87,7 @@ class Router
                 break;
             case 'planningPoney':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/coursPoney.php', "Planning d'un poney", 'main', ['planning.css', 'navigation.css']);
+                self::renderWithTemplate('admin/coursPoney.php', "Planning d'un poney", ['planning.css', 'navigation.css']);
                 break;
 
             default:

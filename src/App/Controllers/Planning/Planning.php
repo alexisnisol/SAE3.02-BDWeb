@@ -7,6 +7,9 @@ use App\Controllers\Planning\Cours\CaseSimple;
 use App\Controllers\Planning\Cours\CaseDouble;
 use App\Controllers\Planning\Cours\Cours;
 use App\Controllers\Planning\PlanningDB;
+use App\Controllers\Auth\Auth;
+use App\Controllers\Auth\Users\Instructor;
+
 
 class Planning
 {
@@ -45,7 +48,7 @@ class Planning
     {
         if($this->id_client){
             $moniteur = Auth::getUserById($this->id_client);
-            if ($moniteur->is_instructor()) {
+            if ($moniteur->isInstructor()) {
                 $schedule = PlanningDB::getWeeklyScheduleForInstructor($moniteur->id);
             } else {
                 $schedule = PlanningDB::getWeeklyScheduleForClient($this->id_client);
