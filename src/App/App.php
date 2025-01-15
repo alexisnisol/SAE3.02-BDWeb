@@ -1,7 +1,7 @@
 <?php
 
 use Config\ConfigBD;
-use App\Database\SQLiteDatabase;
+use App\Database\MySQLDatabase;
 use App\Autoloader;
 
 class App {
