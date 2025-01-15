@@ -19,12 +19,20 @@ function updatePopupContent(courseInfo) {
         <p><strong>Cours :</strong> ${courseInfo.nom_cours}</p>
         <p><strong>Moniteur :</strong> ${courseInfo.moniteur}</p>
         <p><strong>Capacité Maximale:</strong> ${courseInfo.nb_personnes_max}</p>
+        <p><strong> Prix :</strong> ${courseInfo.prix} €
         <p><strong>Niveau:</strong> ${courseInfo.niveau}</p>
+
     `;
     dateTimeElem.textContent = `${courseInfo.date} de ${courseInfo.heure} à ${courseInfo.heureFin}`;
 
     document.getElementById('id_cours').value = courseInfo.id_cours;
+    document.getElementById('id_user').value = courseInfo.id_user;
     document.getElementById('dateC').value = `${courseInfo.date} ${courseInfo.heure}`;
+
+    const bookingForm = document.getElementById('booking-form');
+    bookingForm.dataset.courseName = courseInfo.nom_cours;
+    bookingForm.dataset.coursePrice = courseInfo.prix;
+    bookingForm.dataset.courseNiveau = courseInfo.niveau;
 }
 
 function fetchPoneyDispo(date, heure) {
@@ -76,12 +84,19 @@ function closeBookingPopup() {
 document.getElementById('booking-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const id_user = document.getElementById('id_user').value;
     const id_cours = document.getElementById('id_cours').value;
     const id_poney = document.getElementById('poney_dispo').value;
-    const date = document.getElementById('dateC').value;
+    const dateTime = document.getElementById('dateC').value;
+    const prix = this.dataset.coursePrice; 
+    const nom_cours = this.dataset.courseName;
+    const niveau = this.dataset.courseNiveau;
 
-    submitBooking({ id_user, id_cours, id_poney, date });
+    const [date, heure] = dateTime.split(' ');
+
+    const urlPaiement = `index.php?action=paiement&prix=${prix}&type=${nom_cours}&heure=${encodeURIComponent(heure)}&date=${encodeURIComponent(date)}&id_cours=${id_cours}&id_poney=${id_poney}&niveau=${niveau}`;
+
+    window.location.href = urlPaiement;
+
 });
 
 function submitBooking(bookingData){
