@@ -21,11 +21,11 @@ function updatePopupContent(courseInfo) {
         <p><strong>Capacité Maximale:</strong> ${courseInfo.nb_personnes_max}</p>
         <p><strong> Prix :</strong> ${courseInfo.prix} €
         <p><strong>Niveau:</strong> ${courseInfo.niveau}</p>
-       <p><strong>Participants :</strong></p>
+       <p><strong>Liste des Participants :</strong></p>
     `;
 
     const select = document.createElement('select');
-    select.disabled = true; 
+    console.log(courseInfo.participants);
 
     if (courseInfo.participants && courseInfo.participants.length > 0) {
         courseInfo.participants.forEach(participant => {
