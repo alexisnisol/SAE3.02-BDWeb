@@ -16,6 +16,7 @@ class Planning
     private DateTime $dateFinSemaine;
     private array $planning = [];
     private $id_client;
+    private $id_poney;
 
     public function __construct(int $week, int $year, $id_client)
     {
@@ -23,6 +24,8 @@ class Planning
         $this->year = $year;
         $this->id_client = $id_client;
         $this->initializeDates();
+        
+
     }
 
     /**
@@ -48,9 +51,16 @@ class Planning
         $schedule = PlanningDB::getWeeklySchedule();
         }
 
+    
+
 
         foreach ($schedule as $coursData) {
             $dateCours = new DateTime($coursData['dateR']);
+            if($coursData['id_cp'] != null){
+                $participants = PlanningDB::getParticipants($coursData['id_cp']);
+            }else{
+                $participants = [];
+            }
             if ($dateCours >= $this->dateDebutSemaine && $dateCours <= $this->dateFinSemaine) {
                 $moniteur = $coursData['prenom_moniteur'] . ' ' . $coursData['nom_moniteur'];
                 $cours = new Cours(
@@ -62,8 +72,8 @@ class Planning
                     $coursData['nb_personnes_max'],
                     $moniteur,
                     $coursData['dateR'],
-                    $coursData['id_cp']
-                    
+                    $coursData['id_cp'],
+                    $participants
                 );
 
                 $this->addCoursToPlanning($cours);
