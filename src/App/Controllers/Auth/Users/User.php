@@ -79,6 +79,33 @@ class User {
         $query->execute(array(':id_p' => $this->id));
         return true;
     }
+
+    public function updateDatabase() {
+        $query = App::getApp()->getDB()->prepare(
+            'UPDATE PERSONNE 
+            SET nom = :nom, 
+                prenom = :prenom, 
+                adresse = :adresse, 
+                telephone = :telephone, 
+                email = :email, 
+                poids = :poids, 
+                niveau = :niveau, 
+                mdp = :mdp 
+            WHERE id_p = :id_p'
+        );
+    
+        $query->execute(array(
+            ':nom' => $this->lastName,
+            ':prenom' => $this->firstName,
+            ':adresse' => $this->address,
+            ':telephone' => $this->phone,
+            ':email' => $this->email,
+            ':poids' => $this->weight,
+            ':niveau' => $this->level,
+            ':mdp' => $this->password,
+            ':id_p' => $this->id
+        ));
+    }
 }
 
 ?>

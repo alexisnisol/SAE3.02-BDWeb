@@ -52,6 +52,10 @@ class Router
             case 'register':
                 self::render('auth/register.php', 'Inscription', ['form.css']);
                 break;
+            case 'modif_profil':
+                Auth::checkUserLoggedIn();
+                self::render('auth/modif_profil.php', 'Modif_profil', ['form.css']);
+                break;
             case 'logout':
                 self::render('auth/logout.php', 'Deconnexion', []);
                 break;
