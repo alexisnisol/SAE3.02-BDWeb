@@ -36,8 +36,9 @@ CREATE TABLE PERSONNE
     salaire          DECIMAL(10, 2) NULL,
     poids            FLOAT          NULL CHECK (poids > 9 AND poids < 51),
     cotisation       BOOLEAN,
-    date_inscription DATE DEFAULT (CURRENT_DATE),
-    niveau           INT            NULL CHECK (niveau > 0 AND niveau < 4)
+    date_inscription DATE    DEFAULT (CURRENT_DATE),
+    niveau           INT            NULL CHECK (niveau > 0 AND niveau < 4),
+    admin            BOOLEAN DEFAULT FALSE
 );
 
 -- Création de la table PONEY
