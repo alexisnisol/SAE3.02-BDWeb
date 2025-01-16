@@ -71,23 +71,23 @@ class Router
 
             case 'dashboard':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/dashboard.php', 'Tableau de bord', 'main', ['form.css']);
+                self::render('admin/dashboard.php', 'Tableau de bord', ['form.css']);
                 break;
             case 'creation_cours':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/creation_cours_p.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
+                self::render('admin/creation_cours_p.php', "Création d'un cours", ['form.css', 'full-form.css']);
                 break;
             case 'creation_cours_realise':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/creation_cours_r.php', "Création d'un cours", 'main', ['form.css', 'full-form.css']);
+                self::render('admin/creation_cours_r.php', "Création d'un cours", ['form.css', 'full-form.css']);
                 break;
             case 'creation_poney':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/creation_pon.php', "Création d'un poney", 'main', ['form.css', 'full-form.css']);
+                self::render('admin/creation_pon.php', "Création d'un poney", ['form.css', 'full-form.css']);
                 break;
             case 'planningPoney':
                 Auth::checkUserIsInstructor();
-                self::renderWithTemplate('admin/coursPoney.php', "Planning d'un poney", ['planning.css', 'navigation.css']);
+                self::render('admin/coursPoney.php', "Planning d'un poney", ['planning.css', 'navigation.css']);
                 break;
 
             default:

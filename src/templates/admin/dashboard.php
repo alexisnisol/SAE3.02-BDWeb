@@ -18,12 +18,12 @@ $poneys = PlanningDB::getAllPoneys();
         <div id="poney-form" style="display: none; margin-top: 1rem;">
             <form action="index.php?action=planningPoney" method="get">
                 <input type="hidden" name="action" value="planningPoney">
-
                 <label for="poney">Choisir un poney :</label>
                 <select name="poney" id="poney" required>
                     <option value="" disabled selected>-- Sélectionnez un poney --</option>
                     <?php foreach ($poneys as $poney): ?>
-                        <option value="<?= $poney['id_poney'] ?>"><?= $poney['nom'] ?>, <?=$poney['age']?> ans, <?=$poney['poids_max']?> kg Maximum</option>
+                        
+                        <option value="<?= $poney['id'] ?>"><?= $poney['nom'] ?>, <?=$poney['age']?> ans, <?=$poney['poids_max']?> kg Maximum</option>
                     <?php endforeach; ?>
                 </select>
                 

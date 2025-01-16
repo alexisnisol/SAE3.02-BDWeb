@@ -8,7 +8,7 @@ $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 $user = Auth::getCurrentUserObj();
 
-$id_poney = $_GET['id_poney'];
+$id_poney = $_GET['poney'];
 
 $planning = new Planning($week, $year,null,$id_poney);
 
