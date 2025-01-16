@@ -7,6 +7,23 @@ DELETE FROM PONEY;
 
 ALTER TABLE COURS_PROGRAMME AUTO_INCREMENT = 1;
 
+INSERT INTO `PERSONNE` VALUES
+(1,'Dupont','Alice','123 Rue de Paris','0102030405','alice@example.com',NULL,NULL,NULL,50,0,'2023-10-01',1),
+(2,'Martin','Bob','456 Rue de Lyon','0105060708','bob@example.com',NULL,'Intermediaire',NULL,15,0,'2023-11-01',3),
+(3,'Durand','Claire','789 Rue de Marseille','0102030406','claire@example.com',NULL,'Experienced',300.00,10,0,'2023-12-01',2),
+(4,'Jean','Nicolas','Ici','0000000000','admin@cavalier.com','$2y$10$DNVyjKYpdbjg8ACJi1ao0eSmDDOi5ei8GjkZbVQruDWlXZ7uAyiX6',NULL,300.00,15,1,'2025-01-13',3, 1),
+(5,'nisol','alexis','AAA','0000000000','alexis.nisol@etu.univ-orleans.fr','$2y$10$uRvxCDz9RZ4WDqXqtqE6hessrGWQIvURXa0woS.fujHOurkhtVXCa',NULL,NULL,30,1,'2025-01-13',2),
+(6,'Zouad','Mouad','fff','0601020304','zouadi@mo.fr','$2y$10$2RdwwP7NZxMcgmJ5.l/NJONa1MQiJZoR1PRe/8oiSvzFa/Z5Bm54u',NULL,NULL,22,1,'2025-01-13',3),
+(7,'d','ddd','ddd','0601020304','a@a','$2y$10$PDbicIm38zhu/ycmfnOaOu6KDlyfFkxg44RcieJT2aEo4iX3BlYa6',NULL,NULL,25,1,'2025-01-13',3),
+(9,'Zouadi','Mouad','5 hh','0101010101','m@d','$2y$10$Z.7AT.ySCLWMPK/UL5lS4OP7ZhqOZlpopQ0AyaREzUpsKwPLse0NO',NULL,NULL,25,1,'2025-01-15',2);
+
+INSERT INTO `PONEY` VALUES
+(1,'Spirit',10,45),
+(2,'Black Beauty',12,40),
+(3,'Choco',15,45),
+(4,'Pomme',12,40),
+(5,'Test',15,15);
+
 INSERT INTO `COURS_PROGRAMME` VALUES
 (1,'Cours Debutant',1,2,'10:00:00','Lundi','2024-01-01','2024-01-07',2),
 (2,'Cours Avance',2,2,'14:00:00','Mardi','2024-01-08','2024-01-14',3),
@@ -79,23 +96,6 @@ INSERT INTO `COURS_REALISE` VALUES
 (29,4,'2025-01-18 10:00:00'),
 (30,4,'2025-01-19 18:00:00'),
 (31,4,'2025-01-18 21:00:00');
-
-INSERT INTO `PERSONNE` VALUES
-(1,'Dupont','Alice','123 Rue de Paris','0102030405','alice@example.com',NULL,NULL,NULL,50,0,'2023-10-01',1),
-(2,'Martin','Bob','456 Rue de Lyon','0105060708','bob@example.com',NULL,'Intermediaire',NULL,15,0,'2023-11-01',3),
-(3,'Durand','Claire','789 Rue de Marseille','0102030406','claire@example.com',NULL,'Experienced',300.00,10,0,'2023-12-01',2),
-(4,'Jean','Nicolas','Ici','0000000000','admin@cavalier.com','$2y$10$DNVyjKYpdbjg8ACJi1ao0eSmDDOi5ei8GjkZbVQruDWlXZ7uAyiX6',NULL,300.00,15,1,'2025-01-13',3, 1),
-(5,'nisol','alexis','AAA','0000000000','alexis.nisol@etu.univ-orleans.fr','$2y$10$uRvxCDz9RZ4WDqXqtqE6hessrGWQIvURXa0woS.fujHOurkhtVXCa',NULL,NULL,30,1,'2025-01-13',2),
-(6,'Zouad','Mouad','fff','0601020304','zouadi@mo.fr','$2y$10$2RdwwP7NZxMcgmJ5.l/NJONa1MQiJZoR1PRe/8oiSvzFa/Z5Bm54u',NULL,NULL,22,1,'2025-01-13',3),
-(7,'d','ddd','ddd','0601020304','a@a','$2y$10$PDbicIm38zhu/ycmfnOaOu6KDlyfFkxg44RcieJT2aEo4iX3BlYa6',NULL,NULL,25,1,'2025-01-13',3),
-(9,'Zouadi','Mouad','5 hh','0101010101','m@d','$2y$10$Z.7AT.ySCLWMPK/UL5lS4OP7ZhqOZlpopQ0AyaREzUpsKwPLse0NO',NULL,NULL,25,1,'2025-01-15',2);
-
-INSERT INTO `PONEY` VALUES
-(1,'Spirit',10,45),
-(2,'Black Beauty',12,40),
-(3,'Choco',15,45),
-(4,'Pomme',12,40),
-(5,'Test',15,15);
 
 INSERT INTO `RESERVER` VALUES
 (2,1,1,'2024-01-01 10:00:00'),
