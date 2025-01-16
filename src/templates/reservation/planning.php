@@ -17,8 +17,6 @@ try {
 
 $weekNavigator = new WeekNavigator($week, $year);
 
-error_reporting(0);
-
 $user = Auth::getCurrentUserObj();
 ?>
 
