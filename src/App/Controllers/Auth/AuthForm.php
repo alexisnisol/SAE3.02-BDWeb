@@ -47,6 +47,34 @@ class AuthForm {
 
         return $error;
     }
+
+    static function checkUpdateForm($email, $password, $firstName, $lastName, $address, $phone, $level, $weight): string
+    {
+        $user = Auth::getCurrentUserObj();
+
+        $error = '';
+        if($user){
+            $user->firstName = $firstName;
+            $user->lastName = $lastName;
+            $user->address = $address;
+            $user->email = $email;
+            $user->phone = $phone;
+            $user->level = $level;
+            $user->weight = $weight;
+            if($password){
+                $user->password = $password;
+                $user->hashPassword();
+            }
+            $user->updateDatabase();
+
+            //redirect to login page
+            header('Location: /index.php?action=planning');
+        }else{
+            $error = "Utilisateur non trouvé";
+        }
+
+        return $error;
+    }
 }
 
 ?>

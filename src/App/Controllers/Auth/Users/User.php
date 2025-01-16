@@ -78,7 +78,7 @@ class User {
         return true;
     }
 
-    public function updateInfosPerso() {
+    public function updateDatabase() {
         $query = App::getApp()->getDB()->prepare(
             'UPDATE PERSONNE 
             SET nom = :nom, 
@@ -104,8 +104,6 @@ class User {
             ':id_p' => $this->id
         ));
     }
-    
-        
 }
 
 ?>
