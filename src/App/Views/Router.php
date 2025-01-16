@@ -85,7 +85,14 @@ class Router
                 Auth::checkUserIsInstructor();
                 self::renderWithTemplate('admin/creation_pon.php', "Création d'un poney", 'main', ['form.css', 'full-form.css']);
                 break;
-
+            case 'ajouter_moniteur';
+                Auth::checkUserIsAdmin();
+                self::renderWithTemplate('admin/ajouter_moniteur.php', "Ajout d'un moniteur", 'main', ['form.css', 'full-form.css']);
+                break;
+            case 'retirer_moniteur';
+                Auth::checkUserIsAdmin();
+                self::renderWithTemplate('admin/retirer_moniteur.php', "Suppression d'un moniteur", 'main', ['form.css', 'full-form.css']);
+                break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;
