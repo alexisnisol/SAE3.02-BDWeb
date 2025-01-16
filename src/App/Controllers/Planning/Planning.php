@@ -7,6 +7,9 @@ use App\Controllers\Planning\Cours\CaseSimple;
 use App\Controllers\Planning\Cours\CaseDouble;
 use App\Controllers\Planning\Cours\Cours;
 use App\Controllers\Planning\PlanningDB;
+use App\Controllers\Auth\Auth;
+use App\Controllers\Auth\Users\Instructor;
+
 
 class Planning
 {
@@ -18,11 +21,12 @@ class Planning
     private $id_client;
     private $id_poney;
 
-    public function __construct(int $week, int $year, $id_client)
+    public function __construct(int $week, int $year, $id_client,$id_poney)
     {
         $this->week = $week;
         $this->year = $year;
         $this->id_client = $id_client;
+        $this->id_poney = $id_poney;
         $this->initializeDates();
         
 
@@ -45,8 +49,15 @@ class Planning
     public function generatePlanning(): void
     {
         if($this->id_client){
+            $moniteur = Auth::getUserById($this->id_client);
+            if ($moniteur->isInstructor()) {
+                $schedule = PlanningDB::getWeeklyScheduleForInstructor($moniteur->id);
+            } else {
+                $schedule = PlanningDB::getWeeklyScheduleForClient($this->id_client);
+            }
 
-            $schedule = PlanningDB::getWeeklyScheduleForClient($this->id_client);
+        }elseif($this->id_poney){
+            $schedule = PlanningDB::getWeeklyScheduleForPoney($this->id_poney);
         }else{
         $schedule = PlanningDB::getWeeklySchedule();
         }

@@ -7,7 +7,7 @@ use App\Controllers\Planning\WeekNavigator;
 $week = isset($_GET['week']) ? (int)$_GET['week'] : (int)date('W');
 $year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 
-$planning = new Planning($week, $year,null);
+$planning = new Planning($week, $year,null,null);
 try {
     $planning->generatePlanning();
 } catch (DateMalformedStringException $e) {

@@ -158,6 +158,86 @@ class PlanningDB
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    static function getWeeklyScheduleForInstructor($id_moniteur){
+        $stmt = App::getApp()->getDB()->prepare("
+        SELECT
+            cp.id_cp,
+            cp.nom_cours,
+            cp.niveau,
+            cp.duree,
+            cp.heure,
+            cp.jour,
+            cp.Ddd,
+            cp.Ddf,
+            cp.nb_personnes_max,
+            p.nom AS nom_moniteur,
+            p.prenom AS prenom_moniteur,
+            cr.dateR
+        FROM COURS_REALISE cr
+        LEFT JOIN COURS_PROGRAMME cp ON cp.id_cp = cr.id_cours
+        LEFT JOIN PERSONNE p ON cr.id_moniteur = p.id_p
+        LEFT JOIN RESERVER r ON cp.id_cp = r.id_cours
+        WHERE cr.id_moniteur= :id_moniteur
+        GROUP BY
+            cp.id_cp, cp.jour, cp.heure, cp.nom_cours, cp.niveau, cp.duree, cp.nb_personnes_max, p.nom, p.prenom, cr.dateR
+        ORDER BY
+            CASE cp.jour
+                WHEN 'Lundi' THEN 1
+                WHEN 'Mardi' THEN 2
+                WHEN 'Mercredi' THEN 3
+                WHEN 'Jeudi' THEN 4
+                WHEN 'Vendredi' THEN 5
+                WHEN 'Samedi' THEN 6
+                WHEN 'Dimanche' THEN 7
+                ELSE 8
+            END,
+            cp.heure
+    ");
+
+        $stmt->execute(['id_moniteur' => $id_moniteur]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    static function getWeeklyScheduleForPoney($id_poney){
+        $stmt = App::getApp()->getDB()->prepare("
+        SELECT
+            cp.id_cp,
+            cp.nom_cours,
+            cp.niveau,
+            cp.duree,
+            cp.heure,
+            cp.jour,
+            cp.Ddd,
+            cp.Ddf,
+            cp.nb_personnes_max,
+            p.nom AS nom_moniteur,
+            p.prenom AS prenom_moniteur,
+            cr.dateR
+        FROM COURS_REALISE cr
+        LEFT JOIN COURS_PROGRAMME cp ON cp.id_cp = cr.id_cours
+        LEFT JOIN PERSONNE p ON cr.id_moniteur = p.id_p
+        LEFT JOIN RESERVER r ON cp.id_cp = r.id_cours
+        WHERE r.id_poney= :id_poney
+        GROUP BY
+            cp.id_cp, cp.jour, cp.heure, cp.nom_cours, cp.niveau, cp.duree, cp.nb_personnes_max, p.nom, p.prenom, cr.dateR
+        ORDER BY
+            CASE cp.jour
+                WHEN 'Lundi' THEN 1
+                WHEN 'Mardi' THEN 2
+                WHEN 'Mercredi' THEN 3
+                WHEN 'Jeudi' THEN 4
+                WHEN 'Vendredi' THEN 5
+                WHEN 'Samedi' THEN 6
+                WHEN 'Dimanche' THEN 7
+                ELSE 8
+            END,
+            cp.heure
+    ");
+
+        $stmt->execute(['id_poney' => $id_poney]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     static function getPoneyDispo($date)
     {
