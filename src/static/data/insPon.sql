@@ -5,154 +5,123 @@ DELETE FROM COURS_PROGRAMME;
 DELETE FROM PERSONNE;
 DELETE FROM PONEY;
 
-ALTER TABLE COURS_PROGRAMME AUTO_INCREMENT = 1;
+INSERT INTO `PERSONNE` (id_p, nom, prenom, adresse, telephone, email, mdp, experience, salaire, poids, cotisation, date_inscription, niveau, admin) VALUES
+(1,'Dupont','Alice','123 Rue de Paris','0102030405','alice@example.com',NULL,NULL,NULL,50,0,'2023-10-01',1, NULL),
+(2,'Martin','Bob','456 Rue de Lyon','0105060708','bob@example.com',NULL,'Intermediaire',NULL,15,0,'2023-11-01',3, NULL),
+(3,'Durand','Claire','789 Rue de Marseille','0102030406','claire@example.com',NULL,'Experienced',300.00,10,0,'2023-12-01',2, NULL),
+(4,'Jean','Nicolas','Ici','0000000000','admin@cavalier.com','$2y$10$DNVyjKYpdbjg8ACJi1ao0eSmDDOi5ei8GjkZbVQruDWlXZ7uAyiX6',NULL,300.00,15,1,'2025-01-13',3, 1),
+(5,'nisol','alexis','AAA','0000000000','alexis.nisol@etu.univ-orleans.fr','$2y$10$uRvxCDz9RZ4WDqXqtqE6hessrGWQIvURXa0woS.fujHOurkhtVXCa',NULL,NULL,30,1,'2025-01-13',2, NULL),
+(6,'Zouad','Mouad','fff','0601020304','zouadi@mo.fr','$2y$10$2RdwwP7NZxMcgmJ5.l/NJONa1MQiJZoR1PRe/8oiSvzFa/Z5Bm54u',NULL,NULL,22,1,'2025-01-13',3, NULL),
+(7,'d','ddd','ddd','0601020304','a@a','$2y$10$PDbicIm38zhu/ycmfnOaOu6KDlyfFkxg44RcieJT2aEo4iX3BlYa6',NULL,NULL,25,1,'2025-01-13',3, NULL),
+(9,'Zouadi','Mouad','5 hh','0101010101','m@d','$2y$10$Z.7AT.ySCLWMPK/UL5lS4OP7ZhqOZlpopQ0AyaREzUpsKwPLse0NO',NULL,NULL,25,1,'2025-01-15',2, NULL);
 
--- Insertion dans PERSONNE
+INSERT INTO `PONEY` VALUES
+(1,'Spirit',10,45),
+(2,'Black Beauty',12,40),
+(3,'Choco',15,45),
+(4,'Pomme',12,40),
+(5,'Test',15,15);
 
--- Poids limite mais valide : Client
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES (1, 'Dupont', 'Alice', '123 Rue de Paris', '0102030405', 'alice@example.com', NULL, NULL, 50.0, NULL, '2023-10-01', 1);
+INSERT INTO `COURS_PROGRAMME` VALUES
+(1,'Cours Debutant',1,2,'10:00:00','Lundi','2024-01-01','2024-01-07',2),
+(2,'Cours Avance',2,2,'14:00:00','Mardi','2024-01-08','2024-01-14',3),
+(3,'Cours Expert',3,1,'09:00:00','Mercredi','2024-01-15','2024-01-21',5),
+(4,'Cours de saut',3,1,'10:00:00','Lundi','2024-11-21','2024-12-21',5),
+(5,'Cours Apprentissage',1,2,'10:00:00','Lundi','2024-01-01','2024-01-10',5),
+(6,'Cours Apprentissage',1,2,'12:00:00','Lundi','2024-01-01','2024-01-10',5),
+(7,'Cours Apprentissage',1,2,'13:00:00','Lundi','2024-01-01','2024-01-10',5),
+(8,'Cours Test',2,2,'10:00:00','Lundi','2025-01-01','2025-12-31',10),
+(10,'Remise à niveau',1,1,'12:00:00','Lundi','2025-01-13','2025-01-26',10),
+(11,'Apprentissage collectif',2,2,'15:00:00','Lundi','2025-01-13','2025-01-26',8),
+(12,'Cours avec plots',2,1,'17:00:00','Lundi','2025-01-13','2025-01-26',10),
+(13,'Cours de groupe',3,2,'09:00:00','Mardi','2025-01-13','2025-01-26',10),
+(14,'Cours de saut',3,2,'11:00:00','Mardi','2025-01-13','2025-01-26',5),
+(15,'Cours plot + vitesse',2,1,'16:00:00','Mardi','2025-01-13','2025-01-26',8),
+(16,'Slalom',1,2,'17:00:00','Mardi','2025-01-14','2025-01-26',5),
+(17,'Balade',1,2,'08:00:00','Mercredi','2025-01-13','2025-01-26',10),
+(18,'Slalom',2,1,'10:00:00','Mercredi','2025-01-13','2025-01-26',6),
+(19,'Course',3,1,'11:00:00','Mercredi','2025-01-13','2025-01-26',8),
+(20,'Apprentissage soin',1,2,'15:00:00','Mercredi','2025-01-13','2025-01-26',8),
+(21,'Prise de vitesse + virage',2,2,'18:00:00','Mercredi','2025-01-13','2025-01-26',10),
+(22,'Course en groupe',2,2,'10:00:00','Jeudi','2025-01-13','2025-01-26',10),
+(23,'Relais',2,2,'16:00:00','Jeudi','2025-01-13','2025-01-26',10),
+(24,'Cours personnalisé',1,1,'19:00:00','Jeudi','2025-01-13','2025-01-26',3),
+(25,'Saut + relais',3,2,'09:00:00','Vendredi','2025-01-13','2025-01-26',7),
+(26,'Remise à niveau',1,1,'12:00:00','Vendredi','2025-01-13','2025-01-26',5),
+(27,'Cours avec plots',2,2,'15:00:00','Vendredi','2025-01-13','2025-01-26',6),
+(28,'Course + relais',3,2,'18:00:00','Vendredi','2025-01-13','2025-01-26',8),
+(29,'Passage examens',2,2,'10:00:00','Samedi','2025-01-13','2025-01-26',10),
+(30,'Cours test',3,2,'18:00:00','Dimanche','2025-01-01','2025-12-31',3),
+(31,'dfgfdg',3,2,'21:00:00','Samedi','2025-01-06','2025-01-27',5);
 
--- Valide : Client
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES (2, 'Martin', 'Bob', '456 Rue de Lyon', '0105060708', 'bob@example.com', 'Intermediaire', NULL, 15.0, NULL, '2023-11-01', 3);
+INSERT INTO `COURS_REALISE` VALUES
+(1,3,'2024-01-01 10:00:00'),
+(2,3,'2024-01-09 14:00:00'),
+(3,3,'2024-01-21 09:00:00'),
+(5,3,'2024-01-09 10:00:00'),
+(6,3,'2024-01-09 12:00:00'),
+(7,3,'2024-01-09 13:00:00'),
+(5,4,'2024-01-08 10:00:00'),
+(8,4,'2025-01-06 10:00:00'),
+(8,4,'2025-01-13 10:00:00'),
+(8,4,'2025-01-20 10:00:00'),
+(10,4,'2025-01-13 12:00:00'),
+(11,4,'2025-01-13 15:00:00'),
+(12,4,'2025-01-13 17:00:00'),
+(13,4,'2025-01-14 09:00:00'),
+(14,4,'2025-01-14 11:00:00'),
+(14,4,'2025-01-21 11:00:00'),
+(15,4,'2025-01-14 16:00:00'),
+(15,4,'2025-01-21 16:00:00'),
+(16,4,'2025-01-14 17:00:00'),
+(17,4,'2025-01-15 08:00:00'),
+(18,4,'2025-01-15 10:00:00'),
+(19,4,'2025-01-15 11:00:00'),
+(20,4,'2025-01-15 15:00:00'),
+(20,4,'2025-01-22 15:00:00'),
+(21,4,'2025-01-15 18:00:00'),
+(22,4,'2025-01-16 10:00:00'),
+(22,4,'2025-01-23 10:00:00'),
+(23,4,'2025-01-16 16:00:00'),
+(23,4,'2025-01-23 16:00:00'),
+(24,4,'2025-01-16 19:00:00'),
+(24,4,'2025-01-23 19:00:00'),
+(25,4,'2025-01-17 09:00:00'),
+(26,4,'2025-01-17 12:00:00'),
+(26,4,'2025-01-24 12:00:00'),
+(27,4,'2025-01-17 15:00:00'),
+(28,4,'2025-01-17 18:00:00'),
+(29,4,'2025-01-18 10:00:00'),
+(30,4,'2025-01-19 18:00:00'),
+(31,4,'2025-01-18 21:00:00');
 
--- Poids trop important
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES (3, 'Invalide', 'Invalide', 'Invalide', 'Invalide', 'Invalide@example.com', NULL, NULL, 75, NULL, '2023-12-01', 2);
-
--- Niveau trop important
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES (3, 'Invalide', 'Invalide', 'Invalide', 'Invalide', 'Invalide@example.com', NULL, NULL, 45, NULL, '2023-12-01', 66);  
-
--- Valide : Moniteur
-INSERT INTO PERSONNE (id_p, nom, prenom, adresse, telephone, email, experience, salaire, poids, cotisation, date_inscription, niveau)
-VALUES (3, 'Durand', 'Claire', '789 Rue de Marseille', '0102030406', 'claire@example.com', 'Experienced', 3000, 10.0, NULL, '2023-12-01', 2);
-
--- Insertion dans PONEY
-
--- Valide
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES 
-  (1, 'Spirit', 10, 45.0);
-
--- Valide
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES 
-  (2, 'Black Beauty', 12, 40.0);
-
--- Poids trop important
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES 
-  (3, 'Invalide', 10, 80.0);
-
--- Age trop important
-INSERT INTO PONEY (id, nom, age, poids_max)
-VALUES 
-  (3, 'Invalide', 35, 30.0);
-
-
--- Test inserting invalid data for niveau (should fail)
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut1', 6, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- Test inserting invalid data for duree (should fail)
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut2', 3, 3, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- Test inserting invalid data for heure (should fail)
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut3', 3, 1, '25:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5);
-
--- Test inserting invalid data for jour (should fail)
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut4', 3, 1, '10:00:00', 'Funday', '2024-11-21', '2024-12-21', 5);
-
--- Test inserting invalid data for nb_personnes_max (should fail)
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES ('Cours de saut5', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 15);
-
--- Test inserting valid data
-INSERT INTO COURS_PROGRAMME (nom_cours, niveau, duree, heure, jour, Ddd, Ddf, nb_personnes_max)
-VALUES 
-  ('Cours Debutant', 1, 2, '10:00:00', 'Lundi', '2024-01-01', '2024-01-07', 2),
-  ('Cours Avance', 2, 2, '14:00:00', 'Mardi', '2024-01-08', '2024-01-14', 3),
-  ('Cours Expert', 5, 1, '09:00:00', 'Mercredi', '2024-01-15', '2024-01-21', 5),
-  ('Cours de saut', 3, 1, '10:00:00', 'Lundi', '2024-11-21', '2024-12-21', 5),
-  ('Cours Apprentissage', 1, 2, '10:00:00', 'Lundi', '2024-01-01', '2024-01-10', 5),
-  ('Cours Apprentissage', 1, 2, '12:00:00', 'Lundi', '2024-01-01', '2024-01-10', 5),
-  ('Cours Apprentissage', 1, 2, '13:00:00', 'Lundi', '2024-01-01', '2024-01-10', 5);
-
-
--- Test inserting valid data
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (1, 3, '2024-01-01 10:00:00'),
-  (2, 3, '2024-01-09 14:00:00'),
-  (3, 3, '2024-01-21 09:00:00'),
-  (5, 3, '2024-01-09 10:00:00'),
-  (6, 3, '2024-01-09 12:00:00'),
-  (7, 3, '2024-01-09 13:00:00');
-
--- Test inserting invalid data for id_cours (should fail)
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (8645, 3, '2024-01-01 10:00:00');
-
--- Test inserting invalid data for id_moniteur (should fail) : la personne n'est pas un moniteur
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (4, 1, '2024-01-01 10:00:00');
-
--- Test inserting invalid data for id_moniteur (should fail) : le moniteur est déjà occupé à cette date
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (5, 3, '2024-01-01 10:00:00');
-
--- Tests inserting invalid data for dateR (should fail)
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (4, 3, '2024-01-01 10:00:00');
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (4, 3, '2025-11-30 14:00:00');
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (4, 3, '2025-11-30 10:00:00');
-INSERT INTO COURS_REALISE (id_cours, id_moniteur, dateR)
-VALUES 
-  (4, 3, '2024-12-05 11:00:00');
-
-
-
--- Cas valide
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 1, 1, '2024-01-01 10:00:00');
-
--- Cas non valide (poids de la personne superieur au poids max du poney)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (1, 2, 1, '2024-01-01 10:00:00');
-
--- Cas valide (le poney a eu du repos)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 1, 5, '2024-01-09 10:00:00');
-
--- Cas non valide (le poney a travaille trop d'heures sans repos)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 1, 6, '2024-01-09 12:00:00');
-
--- Cas valide, l'heure de repos est respectee
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 1, 7, '2024-01-09 13:00:00');
-
--- Cas valide (nb personnes dans la limite)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 2, 1, '2024-01-01 10:00:00');
-
--- Cas non valide (depassement du nb_personnes_max : le cours 1 n'accepte que 2 personnes)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (3, 2, 1, '2024-01-01 10:00:00');
-
--- Cas non valide (niveau de la personne insuffisant pour le cours)
-INSERT INTO RESERVER (id_client, id_poney, id_cours, dateR)
-VALUES (2, 1, 3, '2024-01-21 09:00:00');
+INSERT INTO `RESERVER` VALUES
+(2,1,1,'2024-01-01 10:00:00'),
+(2,1,5,'2024-01-09 10:00:00'),
+(2,1,7,'2024-01-09 13:00:00'),
+(2,2,1,'2024-01-01 10:00:00'),
+(4,1,17,'2025-01-15 08:00:00'),
+(4,1,20,'2025-01-15 15:00:00'),
+(4,1,23,'2025-01-16 16:00:00'),
+(4,1,24,'2025-01-23 19:00:00'),
+(4,1,29,'2025-01-18 10:00:00'),
+(4,2,2,'2024-01-09 14:00:00'),
+(4,2,5,'2024-01-09 10:00:00'),
+(4,2,7,'2024-01-09 13:00:00'),
+(4,2,17,'2025-01-15 08:00:00'),
+(4,2,29,'2025-01-18 10:00:00'),
+(4,2,31,'2025-01-18 21:00:00'),
+(5,1,8,'2025-01-13 10:00:00'),
+(6,1,24,'2025-01-16 19:00:00'),
+(7,1,13,'2025-01-14 09:00:00'),
+(7,1,19,'2025-01-15 11:00:00'),
+(7,2,13,'2025-01-14 09:00:00'),
+(7,2,19,'2025-01-15 11:00:00'),
+(7,3,12,'2025-01-13 17:00:00'),
+(7,3,16,'2025-01-14 17:00:00'),
+(7,3,29,'2025-01-18 10:00:00'),
+(7,4,21,'2025-01-15 18:00:00'),
+(7,4,29,'2025-01-18 10:00:00'),
+(9,1,11,'2025-01-13 15:00:00'),
+(9,2,8,'2025-01-13 10:00:00'),
+(9,2,20,'2025-01-15 15:00:00');
