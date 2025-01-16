@@ -28,6 +28,8 @@ class Planning
         $this->id_client = $id_client;
         $this->id_poney = $id_poney;
         $this->initializeDates();
+        
+
     }
 
     /**
@@ -60,9 +62,16 @@ class Planning
         $schedule = PlanningDB::getWeeklySchedule();
         }
 
+    
+
 
         foreach ($schedule as $coursData) {
             $dateCours = new DateTime($coursData['dateR']);
+            if($coursData['id_cp'] != null){
+                $participants = PlanningDB::getParticipants($coursData['id_cp']);
+            }else{
+                $participants = [];
+            }
             if ($dateCours >= $this->dateDebutSemaine && $dateCours <= $this->dateFinSemaine) {
                 $moniteur = $coursData['prenom_moniteur'] . ' ' . $coursData['nom_moniteur'];
                 $cours = new Cours(
@@ -74,8 +83,8 @@ class Planning
                     $coursData['nb_personnes_max'],
                     $moniteur,
                     $coursData['dateR'],
-                    $coursData['id_cp']
-                    
+                    $coursData['id_cp'],
+                    $participants
                 );
 
                 $this->addCoursToPlanning($cours);
