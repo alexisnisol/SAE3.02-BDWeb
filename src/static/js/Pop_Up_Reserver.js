@@ -25,7 +25,6 @@ function updatePopupContent(courseInfo) {
     `;
 
     const select = document.createElement('select');
-    console.log(courseInfo.participants);
 
     if (courseInfo.participants && courseInfo.participants.length > 0) {
         courseInfo.participants.forEach(participant => {

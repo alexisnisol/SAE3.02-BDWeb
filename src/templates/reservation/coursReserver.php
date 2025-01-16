@@ -30,6 +30,7 @@ $weekNavigator = new WeekNavigator($week, $year, true);
     </div>
     <div class="info">
         <h3>Infos personnelles</h3>
+        <a class="btn-modif" href="index.php?action=modif_profil">Modifier mon profil</a>
         <p><strong>Nom : </strong> <?= $user->firstName ?></p>
         <p><strong>Prénom : </strong> <?= $user->lastName ?></p>
         <p><strong>Email : </strong> <?= $user->email ?></p>

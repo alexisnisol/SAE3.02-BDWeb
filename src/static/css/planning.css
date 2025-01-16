@@ -224,3 +224,20 @@ select {
     background-color: #ffffff;
     color: #001f3f;
 }
+
+.btn-modif{
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ffffff;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-left: 4rem;
+    margin-top: 3rem;
+}
+
+.btn-modif:hover {
+    background-color: #ffffff;
+    color: #001f3f;
+}
