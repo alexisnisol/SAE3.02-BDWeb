@@ -19,6 +19,7 @@ class AuthForm {
                 $_SESSION['user_email'] = $user->email;
                 $_SESSION['user_name'] = $user->lastName;
                 $_SESSION['is_instructor'] = $user->isInstructor();
+                $_SESSION['is_admin'] = $user->isAdmin;
                 header('Location: /');
             }else{
                 $error = 'Mot de passe incorrect';

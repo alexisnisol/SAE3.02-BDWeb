@@ -34,10 +34,15 @@ $user = Auth::getCurrentUserObj();
             <p><strong>Téléphone : </strong> <?= $user->phone ?></p>
             <p><strong>Niveau : </strong><?= $user->getLevel()?></p>
             <p><strong>Date Inscription : </strong><?= $user->date_inscription ?></p>
-            <p><strong>Est payé : </strong><?= $user->checkEstPaye() ?></p>
             <?php
             if (!$user->estPaye()) {
-                echo '<p><a class="btn_payer" href="index.php?action=paiement">Payer maintenant</a></p>';
+                echo "<p><strong>Attention ! </strong> Vous n'avez pas payez la cotisation anuelle.</p>";
+            
+
+            $prix = 60;
+            $typePaiement = 'Cotisation Annuelle ' . date('Y');
+            echo '<p><a class="btn_payer" href="index.php?action=paiement&prix=' . $prix . '&type=' . $typePaiement . '">Payez maintenant</a></p>';
+
             }
             ?>
         </div>

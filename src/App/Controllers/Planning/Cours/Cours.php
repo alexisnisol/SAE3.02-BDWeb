@@ -18,6 +18,7 @@ class Cours {
     public $nb_personnes_max;
     public $nom_moniteur;
     public $participants = [];
+    public $prix;
 
     public function __construct($jour, $heure, $duree, $nom_cours, $niveau, $nb_personnes_max, $nom_moniteur,$date, $id_cours) {
         $this->jour = $jour;
@@ -29,6 +30,11 @@ class Cours {
         $this->nb_personnes_max = $nb_personnes_max;
         $this->date = $date;
         $this->id_cours = $id_cours;
+        if($this->duree == 2){
+            $this->prix = 35.99;
+        }else{
+            $this->prix = 19.99;
+        }
     }
 
     public function getHeure() {
@@ -77,10 +83,15 @@ class Cours {
                 'heure' => $formattedTime,
                 'heureFin' => $formattedTimeFin,
                 'id_cours' => $this->id_cours,
-                'niveau' => self::getLevel($this->niveau)
+                'prix' => $this->prix,
+                'id_user' => $_SESSION['user']['id'],
+                'niveau' => $this->niveau
+
+
             ]) . ")'>
                 <h4>" . htmlspecialchars($this->nom_cours) . "</h4>
                 <p><strong>Capacité Maximale:</strong> " . htmlspecialchars($this->nb_personnes_max) . "</p>
+                <p><strong>Prix :</strong> " . htmlspecialchars($this->prix) . "€</p>
                 <p><strong>Moniteur :</strong> " . htmlspecialchars($this->nom_moniteur) . "</p>
             </div>";
     }

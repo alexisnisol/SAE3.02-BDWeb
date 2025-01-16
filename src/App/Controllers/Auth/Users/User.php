@@ -20,8 +20,9 @@ class User {
     public $cotisation;
     public $salaire;
     public $experience;
+    public $isAdmin;
 
-    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, $date_inscription, $cotisation){
+    public function __construct($id, $firstName, $lastName, $address, $email, $phone, $level, $weight, $password, $date_inscription, $cotisation, $isAdmin = false){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -33,6 +34,7 @@ class User {
         $this->password = $password;
         $this->date_inscription = $date_inscription;
         $this->cotisation = $cotisation;
+        $this->isAdmin = $isAdmin;
     }
 
     public function isInstructor() {
@@ -67,9 +69,9 @@ class User {
 
     public function checkEstPaye(){
         if ($this->cotisation === 1){
-            return "Oui";
+            return true;
         }
-        return "Non";
+        return false;
     }
 
     public function setCotisation(){
