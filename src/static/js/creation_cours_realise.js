@@ -28,6 +28,6 @@ function convertDayToNumber(day) {
         case 'Samedi':
             return 6;
         case 'Dimanche':
-            return 7;
+            return 0;
     }
 }

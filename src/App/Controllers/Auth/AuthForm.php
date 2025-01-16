@@ -19,6 +19,7 @@ class AuthForm {
                 $_SESSION['user_email'] = $user->email;
                 $_SESSION['user_name'] = $user->lastName;
                 $_SESSION['is_instructor'] = $user->isInstructor();
+                $_SESSION['is_admin'] = $user->isAdmin;
                 header('Location: /');
             }else{
                 $error = 'Mot de passe incorrect';
@@ -43,6 +44,34 @@ class AuthForm {
             header('Location: /index.php?action=login');
         }else{
             $error = "Un utilisateur avec cet email existe déjà";
+        }
+
+        return $error;
+    }
+
+    static function checkUpdateForm($email, $password, $firstName, $lastName, $address, $phone, $level, $weight): string
+    {
+        $user = Auth::getCurrentUserObj();
+
+        $error = '';
+        if($user){
+            $user->firstName = $firstName;
+            $user->lastName = $lastName;
+            $user->address = $address;
+            $user->email = $email;
+            $user->phone = $phone;
+            $user->level = $level;
+            $user->weight = $weight;
+            if($password){
+                $user->password = $password;
+                $user->hashPassword();
+            }
+            $user->updateDatabase();
+
+            //redirect to login page
+            header('Location: /index.php?action=planning');
+        }else{
+            $error = "Utilisateur non trouvé";
         }
 
         return $error;

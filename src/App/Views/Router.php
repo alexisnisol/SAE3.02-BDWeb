@@ -52,6 +52,10 @@ class Router
             case 'register':
                 self::render('auth/register.php', 'Inscription', ['form.css']);
                 break;
+            case 'modif_profil':
+                Auth::checkUserLoggedIn();
+                self::render('auth/modif_profil.php', 'Modif_profil', ['form.css']);
+                break;
             case 'logout':
                 self::render('auth/logout.php', 'Deconnexion', []);
                 break;
@@ -89,7 +93,14 @@ class Router
                 Auth::checkUserIsInstructor();
                 self::render('admin/coursPoney.php', "Planning d'un poney", ['planning.css', 'navigation.css']);
                 break;
-
+            case 'ajouter_moniteur';
+                Auth::checkUserIsAdmin();
+                self::renderWithTemplate('admin/ajouter_moniteur.php', "Ajout d'un moniteur", 'main', ['form.css', 'full-form.css']);
+                break;
+            case 'retirer_moniteur';
+                Auth::checkUserIsAdmin();
+                self::renderWithTemplate('admin/retirer_moniteur.php', "Suppression d'un moniteur", 'main', ['form.css', 'full-form.css']);
+                break;
             default:
                 self::render('404.php', 'Page introuvable', ['404.css']);
                 break;

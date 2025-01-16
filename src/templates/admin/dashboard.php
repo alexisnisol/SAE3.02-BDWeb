@@ -30,6 +30,19 @@ $poneys = PlanningDB::getAllPoneys();
                 <button type="submit" style="margin-top: 1rem;">Voir le planning</button>
             </form>
         </div>
+
+        <?php
+
+        use App\Controllers\Auth\Auth;
+
+        if (Auth::isAdmin()) {
+        ?>
+        <h1 style="margin-bottom:1rem;margin-top:2rem;">Dashboard - Admin</h1>
+        <button onclick="window.location='index.php?action=ajouter_moniteur';">Ajouter un moniteur</button>
+        <button onclick="window.location='index.php?action=retirer_moniteur';">Retirer un moniteur</button>
+        <?php
+        }
+        ?>
     </div>
     <script>
     document.getElementById('show-poney-form').addEventListener('click', function() {

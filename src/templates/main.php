@@ -59,7 +59,7 @@ use App\Views\Flash;
         if (Auth::isUserLoggedIn()) {
             echo '<p>Bonjour, ' . Auth::getCurrentUser()['name'] . '</p>';
 
-            if (Auth::getCurrentUserObj()->isInstructor()) {
+            if (Auth::isInstructor()) {
                 echo '<a href="index.php?action=dashboard">Dashboard</a>';
             }
 
