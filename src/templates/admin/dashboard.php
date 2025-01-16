@@ -43,6 +43,7 @@ $poneys = PlanningDB::getAllPoneys();
         <?php
         }
         ?>
+        
     </div>
     <script>
     document.getElementById('show-poney-form').addEventListener('click', function() {

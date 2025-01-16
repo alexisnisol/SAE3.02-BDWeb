@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         <form action="#" method="POST">
 
             <div class="input-container">
-                <label for="id_user">Choisir un cours programmé</label>
+                <label for="id_user">Choisir une Personne</label>
                 <select id="id_user" name="id_user" required>
                     <?php
                     $allUsers = App::getApp()->getDB()->getAllUsers(true);
